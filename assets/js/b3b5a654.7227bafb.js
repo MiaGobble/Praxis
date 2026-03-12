@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[271],{2008:e=>{e.exports=JSON.parse('{"functions":[],"properties":[],"types":[],"name":"","desc":"","source":{"line":33,"path":"src/Packages/_Index/miagobble_expressive-prompts@1.0.0/expressive-prompts/init.luau"}}')}}]);
