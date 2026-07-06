@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[236],{4410:s=>{s.exports=JSON.parse('{"sourceUrl":"https://github.com/MiaGobble/Praxis/blob/main","baseUrl":"/","classOrder":[],"apiCategories":[]}')}}]);
