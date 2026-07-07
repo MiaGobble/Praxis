@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[4251],{92163:e=>{e.exports=JSON.parse('{"functions":[],"properties":[],"types":[],"name":"PreferredInput","desc":"A helper library for observing the preferred user input of the player.","source":{"line":6,"path":"src/Packages/Input/PreferredInput.luau"}}')}}]);

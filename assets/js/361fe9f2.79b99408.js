@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[7199],{93355:e=>{e.exports=JSON.parse('{"functions":[],"properties":[],"types":[],"name":"Mouse","desc":"Mouse input capturer.","source":{"line":6,"path":"src/Packages/Input/Mouse.luau"}}')}}]);

@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[9782],{27012:s=>{s.exports=JSON.parse('{"functions":[],"properties":[],"types":[],"name":"Input","desc":"The Input package provides access to various user input classes. Based on the Input library from sleitnick.","source":{"line":6,"path":"src/Packages/Input/init.luau"}}')}}]);

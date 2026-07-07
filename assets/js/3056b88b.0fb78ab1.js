@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[959],{85879:e=>{e.exports=JSON.parse('{"functions":[],"properties":[],"types":[],"name":"Touch","desc":"Touch input capturer.","source":{"line":6,"path":"src/Packages/Input/Touch.luau"}}')}}]);

@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[6442],{5961:e=>{e.exports=JSON.parse('{"functions":[],"properties":[],"types":[],"name":"Keyboard","desc":"Keyboard input capturer.","source":{"line":6,"path":"src/Packages/Input/Keyboard.luau"}}')}}]);

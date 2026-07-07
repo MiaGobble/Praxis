@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[6751],{49443:e=>{e.exports=JSON.parse('{"functions":[],"properties":[],"types":[],"name":"Gamepad","desc":"Gamepad input capturer.","source":{"line":6,"path":"src/Packages/Input/Gamepad.luau"}}')}}]);
