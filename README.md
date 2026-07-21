@@ -44,3 +44,8 @@ The above list can change at any time, especially for parts that are not yet com
 Praxis is currently early in development and is public to serve as a WIP.
 
 Need support, want to leave suggestions, or chat about Praxis? Join this Discord server: https://discord.gg/Ux9jdhhWxg
+
+<!--moonwave-hide-after-this-line-->
+
+# SCDS Rating
+<img src="./.moonwave/static/fib.png" alt="Alt Text" width="175.5" height="167.75">
