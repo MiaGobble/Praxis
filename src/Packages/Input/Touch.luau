@@ -11,15 +11,11 @@ Touch.__index = Touch
 local UserInputService = game:GetService("UserInputService")
 
 -- Imports
-local Packages = script.Parent:FindFirstChild("roblox_packages")
-	or script.Parent:FindFirstChild("Packages")
-	or script.Parent.Parent
-
-local Signal = require(Packages.Signal)
-local Bucket = require(Packages.Bucket)
+local Signal = require("@pkg/Signal")
+local Bucket = require("@pkg/Bucket")
 
 -- Types
-type Touch = typeof(setmetatable({}, Touch)) & {
+type Touch = typeof(setmetatable({} :: {
     _Bucket : Bucket.Bucket,
     TouchTap : Signal.Signal<{Vector2}, boolean>,
     TouchTapInWorld : Signal.Signal<Vector2, boolean>,
@@ -31,10 +27,10 @@ type Touch = typeof(setmetatable({}, Touch)) & {
     TouchSwipe : Signal.Signal<Enum.SwipeDirection, number, boolean>,
     TouchStarted : Signal.Signal<InputObject, boolean>,
     TouchEnded : Signal.Signal<InputObject, boolean>,
-}
+}, Touch))
 
-function Touch.new()
-    local self : Touch = setmetatable({}, Touch)
+function Touch.new(): (Touch)
+    local self = setmetatable({}, Touch) :: Touch
 
     self._Bucket = Bucket.new()
 
