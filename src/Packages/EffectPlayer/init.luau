@@ -17,17 +17,24 @@ local RunService = game:GetService("RunService")
 local TweenService = game:GetService("TweenService")
 
 -- Imports
-local Packages = script:FindFirstChild("roblox_packages")
-	or script:FindFirstChild("Packages")
-	or script.Parent
+local Bezier = require("@pkg/Bezier")
 
-local Bezier = require(Packages.Bezier)
+type AnimationIndicator = Instance & {
+	Duration: NumberValue,
+	TweenStyle: StringValue,
+	TweenDirection: StringValue,
+	RepeatCount: NumberValue,
+	Reverses: BoolValue,
+	DelayTime: NumberValue,
+}
+
+type CFrameInstance = BasePart | Attachment | Camera
 
 -- Variables
 local ActiveTasks = {}
 
 -- Get time from tween info
-local function GetTimeFromTweenInfo(TweenInfo : TweenInfo)
+local function GetTimeFromTweenInfo(TweenInfo : TweenInfo): number
     local Duration = TweenInfo.Time
     local Delay = TweenInfo.DelayTime
 
@@ -43,7 +50,7 @@ local function GetTimeFromTweenInfo(TweenInfo : TweenInfo)
 end
 
 -- Helper function to calculate distance-based volume
-local function CalculateVolume(Sound: Sound, ParentInstance: Instance): number
+local function CalculateVolume(Sound: Sound, ParentInstance: BasePart | Attachment): number
     -- Return 1 if not using plugin
     if RunService:IsRunning() then
         return 1
@@ -84,40 +91,44 @@ local function CalculateVolume(Sound: Sound, ParentInstance: Instance): number
     return Volume
 end
 
+local function TweenInfoFromAnimationIndicator(animationIndicator: AnimationIndicator): (TweenInfo)
+	return TweenInfo.new(
+        animationIndicator.Duration.Value,
+        Enum.EasingStyle:FromName(animationIndicator.TweenStyle.Value),
+        Enum.EasingDirection:FromName(animationIndicator.TweenDirection.Value),
+        animationIndicator.RepeatCount.Value,
+        animationIndicator.Reverses.Value,
+        animationIndicator.DelayTime.Value
+    )
+end
+
 -- Function to animate tweens
-local function AnimateTween(ParentAttachment : Attachment)
-    local Mover = ParentAttachment:FindFirstChild("Mover")
+local function AnimateTween(ParentAttachment : Attachment): (number?)
+    local Mover = ParentAttachment:FindFirstChild("Mover") :: CFrameInstance?
 
     if not Mover then
-        return
+        return nil
     end
 
-    local Origin = ParentAttachment:FindFirstChild("Origin")
+    local Origin = ParentAttachment:FindFirstChild("Origin") :: CFrameInstance?
 
     if not Origin then
-        return
+        return nil
     end
 
-    local Target = ParentAttachment:FindFirstChild("Target")
+    local Target = ParentAttachment:FindFirstChild("Target") :: CFrameInstance?
 
     if not Target then
-        return
+        return nil
     end
     
-    local AnimationIndicator = ParentAttachment:FindFirstChild("AnimationIndicator")
+    local AnimationIndicator = ParentAttachment:FindFirstChild("AnimationIndicator") :: AnimationIndicator?
 
     if not AnimationIndicator then
-        return
+        return nil
     end
 
-    local TweenStyle = TweenInfo.new(
-        AnimationIndicator.Duration.Value,
-        Enum.EasingStyle[AnimationIndicator.TweenStyle.Value],
-        Enum.EasingDirection[AnimationIndicator.TweenDirection.Value],
-        AnimationIndicator.RepeatCount.Value,
-        AnimationIndicator.Reverses.Value,
-        AnimationIndicator.DelayTime.Value
-    )
+    local TweenStyle = TweenInfoFromAnimationIndicator(AnimationIndicator)
 
     local Tween = TweenService:Create(Mover, TweenStyle, {
         CFrame = Target.CFrame
@@ -130,43 +141,43 @@ local function AnimateTween(ParentAttachment : Attachment)
 end
 
 -- Function to animate bezier tweens
-local function AnimateBezier(ParentAttachment : Attachment)
-    local Mover = ParentAttachment:FindFirstChild("Mover")
+local function AnimateBezier(ParentAttachment : Attachment): (number?)
+    local Mover = ParentAttachment:FindFirstChild("Mover") :: CFrameInstance?
 
     if not Mover then
-        return
+        return nil
     end
 
-    local Origin = ParentAttachment:FindFirstChild("Origin")
+    local Origin = ParentAttachment:FindFirstChild("Origin") :: CFrameInstance?
 
     if not Origin then
-        return
+        return nil
     end
     
-    local Target = ParentAttachment:FindFirstChild("Target")
+    local Target = ParentAttachment:FindFirstChild("Target") :: CFrameInstance?
 
     if not Target then
-        return
+        return nil
     end
 
-    local Midpoints = {ParentAttachment:FindFirstChild("Midpoint")}
+    local Midpoints: {Attachment?} = {ParentAttachment:FindFirstChild("Midpoint") :: Attachment?}
 
     for _, Midpoint in ParentAttachment:GetChildren() do
         if not Midpoint:IsA("Attachment") then
             continue
         end
 
-        local MidpointIndex = Midpoint.Name:gsub("Midpoint", "")
+        local MidpointIndex = tonumber(Midpoint.Name:gsub("Midpoint", ""))
 
-        if MidpointIndex and tonumber(MidpointIndex) then
-            Midpoints[tonumber(MidpointIndex)] = Midpoint
+        if MidpointIndex then
+            Midpoints[MidpointIndex] = Midpoint
         end
     end
 
-    local AnimationIndicator = ParentAttachment:FindFirstChild("AnimationIndicator")
+    local AnimationIndicator = ParentAttachment:FindFirstChild("AnimationIndicator") :: AnimationIndicator?
 
     if not AnimationIndicator then
-        return
+        return nil
     end
 
     local Positions = {}
@@ -179,17 +190,11 @@ local function AnimateBezier(ParentAttachment : Attachment)
 
     table.insert(Positions, Target.WorldPosition)
 
-    local TweenStyle = TweenInfo.new(
-        AnimationIndicator.Duration.Value,
-        Enum.EasingStyle[AnimationIndicator.TweenStyle.Value],
-        Enum.EasingDirection[AnimationIndicator.TweenDirection.Value],
-        AnimationIndicator.RepeatCount.Value,
-        AnimationIndicator.Reverses.Value,
-        AnimationIndicator.DelayTime.Value
-    )
+    local TweenStyle = TweenInfoFromAnimationIndicator(AnimationIndicator)
 
-    if Mover:FindFirstChild("ReferenceValue") then
-        Mover:FindFirstChild("ReferenceValue"):Destroy()
+	local OldReferenceValue = Mover:FindFirstChild("ReferenceValue")
+    if OldReferenceValue then
+       OldReferenceValue:Destroy()
     end
 
     local ReferenceValue = Instance.new("NumberValue")
@@ -220,42 +225,44 @@ end
 -- Actually plays the effect
 local function PlayEffect(This : Instance, Bin : Instance) : number?
     local TotalDuration = nil
+	local EmitDelay = This:GetAttribute(`"EmitDelay"`) :: number? or 0
+	local EmitDuration = This:GetAttribute("EmitDuration") :: number? or 0
 
     if This:IsA("ModuleScript") then
         local Duplicate = This:Clone()
         Duplicate.Parent = script
 
-        local Module = require(Duplicate)
+        local Module: {Identifier: any, Callback: any, Cleanup: any, Lifetime: any} = require(Duplicate) :: any
 
         if typeof(Module) ~= "table" then
-            return
+            return nil
         end
 
         if not Module.Identifier or Module.Identifier ~= "VISUAL_EFFECT" then
-            return
+            return nil
         end
 
         if not Module.Callback then
             warn(`No callback found in {This:GetFullName()}`)
-            return
+            return nil
         end
 
         if not Module.Cleanup then
             warn(`No cleanup found in {This:GetFullName()}`)
-            return
+            return nil
         end
 
         if not Module.Lifetime then
             warn(`No lifetime found in {This:GetFullName()}`)
-            return
+            return nil
         end
         
-        task.delay(This:GetAttribute("EmitDelay") or 0, function()
-            Module.Callback(This.Parent)
+        task.delay(EmitDelay, function()
+            (Module.Callback :: any)(This.Parent)
 
             task.delay(Module.Lifetime, function()
                 local Success, Error = pcall(function()
-                    Module.Cleanup(This.Parent)
+                    (Module.Cleanup :: any)(This.Parent)
                 end)
 
                 if not Success then
@@ -266,26 +273,26 @@ local function PlayEffect(This : Instance, Bin : Instance) : number?
             end)
         end)
 
-        TotalDuration = Module.Lifetime + (This:GetAttribute("EmitDelay") or 0)
+        TotalDuration = Module.Lifetime + EmitDelay
     elseif This:IsA("ParticleEmitter") then
-        task.delay(This:GetAttribute("EmitDelay") or 0, function()
-            This:Emit(This:GetAttribute("EmitCount") or 1)
+        task.delay(EmitDelay, function()
+            This:Emit(This:GetAttribute("EmitCount") :: number? or 1)
 
-            if (This:GetAttribute("EmitDuration") or 0) > 0 then
+            if EmitDuration > 0 then
                 This.Enabled = true
 
-                task.delay(This:GetAttribute("EmitDuration"), function()
+                task.delay(EmitDuration, function()
                     This.Enabled = false
                 end)
             end
         end)
 
-        TotalDuration = (This:GetAttribute("EmitDuration") or 0) + (This:GetAttribute("EmitDelay") or 0) + This.Lifetime.Max
+        TotalDuration = EmitDuration + EmitDelay + This.Lifetime.Max
     elseif This:IsA("Sound") then
         local NewSound = This:Clone()
-        NewSound.Parent = if This.Parent then This.Parent else workspace
+        NewSound.Parent = This.Parent or workspace
 
-        task.delay(This:GetAttribute("EmitDelay") or 0, function()
+        task.delay(EmitDelay, function()
             -- Set initial volume based on distance
             if This.Parent and (This.Parent:IsA("BasePart") or This.Parent:IsA("Attachment")) then
                 local Attenuation = CalculateVolume(This, This.Parent)
@@ -300,8 +307,8 @@ local function PlayEffect(This : Instance, Bin : Instance) : number?
                 end)
             end
 
-            if (This:GetAttribute("EmitDuration") or 0) > 0 then
-                task.delay(This:GetAttribute("EmitDuration"), function()
+            if EmitDuration > 0 then
+                task.delay(EmitDuration, function()
                     NewSound:Stop()
                 end)
             end
@@ -311,28 +318,28 @@ local function PlayEffect(This : Instance, Bin : Instance) : number?
             end)
         end)
 
-        if (This:GetAttribute("EmitDuration") or 0) > 0 then
-            TotalDuration = This:GetAttribute("EmitDuration") + (This:GetAttribute("EmitDelay") or 0)
+        if EmitDuration > 0 then
+            TotalDuration = EmitDuration + EmitDelay
         else
-            TotalDuration = (This.TimeLength / This.PlaybackSpeed) + (This:GetAttribute("EmitDelay") or 0)
+            TotalDuration = (This.TimeLength / This.PlaybackSpeed) + EmitDelay
         end
     elseif This:IsA("Trail") then
         This.Enabled = false
 
-        table.insert(ActiveTasks[Bin], task.delay(This:GetAttribute("EmitDelay") or 0, function()
+        table.insert(ActiveTasks[Bin], task.delay(EmitDelay, function()
             This.Enabled = true
 
-            table.insert(ActiveTasks[Bin], task.delay(This:GetAttribute("EmitDuration") or 0, function()
+            table.insert(ActiveTasks[Bin], task.delay(EmitDuration, function()
                 This.Enabled = false
             end))
         end))
 
-        TotalDuration = (This:GetAttribute("EmitDuration") or 0) + (This:GetAttribute("EmitDelay") or 0)
+        TotalDuration = EmitDuration + EmitDelay
     elseif This:IsA("StringValue") and This.Name == "AnimationIndicator" then
         if This.Value == "Tween" then
-            TotalDuration = AnimateTween(This.Parent)
+            TotalDuration = AnimateTween(This.Parent :: Attachment)
         elseif This.Value == "Bezier" then
-            TotalDuration = AnimateBezier(This.Parent)
+            TotalDuration = AnimateBezier(This.Parent :: Attachment)
         end
     end
 
