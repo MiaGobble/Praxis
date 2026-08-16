@@ -15,9 +15,11 @@ local Optional = {}
     ```
 ]=]
 
+-- It's unfortunately not possible to infer the import's type as the require is dynamic.
+
 function Optional.Get(object : Instance | string)
     local Success, Module = pcall(function()
-        return require(object)
+        return require(object) :: any
     end)
 
     if not Success then
