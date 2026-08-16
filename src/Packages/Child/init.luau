@@ -49,6 +49,8 @@ function Child.FromPathAsync(root: Instance, path: { string }, timeoutAfter: num
 		if not Discovery then
 			return nil
 		end
+
+		Object = Discovery
 	end
 
 	return Object
