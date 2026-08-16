@@ -87,10 +87,10 @@ end
     Returns a function that cleans up the scope
 
     @param Scope Scope -- The Seam scope
-    @return () -> nil -- The wrapped cleanup function
+    @return () -> () -- The wrapped cleanup function
 ]=]
 
-function SeamStoryUtils.WrappedScopeCleanup(Scope : ScopeInstance) : () -> nil
+function SeamStoryUtils.WrappedScopeCleanup(Scope : ScopeInstance) : () -> ()
     return function()
         Scope:Destroy()
     end
