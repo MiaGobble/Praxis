@@ -20,7 +20,7 @@ local Select = {}
     ```
 ]=]
 
-function Select.Only(index : number, ... : any?) : any?
+function Select.Only<T>(index : number, ... : T?) : T?
     local Args = {...}
 
     return Args[index]
@@ -38,7 +38,7 @@ end
     ```
 ]=]
 
-function Select.First(... : any?) : any?
+function Select.First<T>(... : T?) : T?
     local Args = {...}
 
     return Args[1]
@@ -55,7 +55,7 @@ end
     ```
 ]=]
 
-function Select.Last(... : any?) : any?
+function Select.Last<T>(... : T?) : T?
     local Args = {...}
     return Args[#Args]
 end
@@ -71,7 +71,7 @@ end
     ```
 ]=]
 
-function Select.Random(... : any?) : any?
+function Select.Random<T>(... : T?) : T?
     local Args = {...}
 
     return Args[math.random(1, #Args)]
