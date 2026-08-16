@@ -5,7 +5,6 @@ local HttpService = game:GetService("HttpService")
 
 -- Imports
 local Signal = require("@pkg/Signal")
-local Types = require("./Types")
 
 -- Types extended
 export type QuestData = {
@@ -36,10 +35,10 @@ export type QuestProgress = {
 }
 
 export type Quest = QuestData & {
-    OnStepIncrement : Types.Signal<Player, number>,
-    OnStart : Types.Signal<Player>,
-    OnComplete : Types.Signal<Player>,
-    OnStepComplete : Types.Signal<Player>,
+    OnStepIncrement : Signal.Signal<Player, number>,
+    OnStart : Signal.Signal<Player>,
+    OnComplete : Signal.Signal<Player>,
+    OnStepComplete : Signal.Signal<Player>,
 
     Start : (Player : Player, ExistingProgress : QuestProgress) -> QuestProgress,
     MakeProgress : (Player : Player, ExistingProgress : QuestProgress, StepProgressed : number, AmountProgressed : number) -> QuestProgress,
