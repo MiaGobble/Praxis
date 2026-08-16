@@ -7,14 +7,10 @@
 local Bezier = {}
 
 -- Imports
-local Packages = script:FindFirstChild("roblox_packages")
-	or script:FindFirstChild("Packages")
-	or script.Parent
-
-local ValuePacker = require(Packages.ValuePacker)
+local ValuePacker = require("@pkg/ValuePacker")
 
 local function LerpComponentValues(StartComponents: { number }, EndComponents: { number }, AlphaValue: number): { number }
-	local LerpedComponents = table.create(#StartComponents)
+	local LerpedComponents = table.create<<number>>(#StartComponents)
 
 	for ComponentIndex = 1, #StartComponents do
 		LerpedComponents[ComponentIndex] = StartComponents[ComponentIndex] + (EndComponents[ComponentIndex] - StartComponents[ComponentIndex]) * AlphaValue
@@ -46,7 +42,7 @@ local function UnpackControlPoints(ControlPoints: { any }): ({ { number } }, str
 	end
 
 	local ComponentCount = #FirstPointComponents
-	local UnpackedControlPoints = table.create(#ControlPoints)
+	local UnpackedControlPoints = table.create<<{number}>>(#ControlPoints)
 	UnpackedControlPoints[1] = FirstPointComponents
 
 	for ControlPointIndex = 2, #ControlPoints do
@@ -213,7 +209,7 @@ function Bezier.Tangent(ControlPoints: { any }, AlphaValue: number): any
 	for ControlPointIndex = 1, CurveDegree do
 		local NextControlPointComponents = UnpackedControlPoints[ControlPointIndex + 1]
 		local CurrentControlPointComponents = UnpackedControlPoints[ControlPointIndex]
-		local DerivativeComponents = table.create(#CurrentControlPointComponents)
+		local DerivativeComponents = table.create<<number>>(#CurrentControlPointComponents)
 
 		for ComponentIndex = 1, #CurrentControlPointComponents do
 			DerivativeComponents[ComponentIndex] = (NextControlPointComponents[ComponentIndex] - CurrentControlPointComponents[ComponentIndex]) * CurveDegree
