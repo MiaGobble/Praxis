@@ -14,7 +14,7 @@ local Child = {}
     Seeks a child or descendant from a path, returning nil if it doesn't exist.
 ]=]
 
-function Child.FromPathOptional(root: Instance, path: { string }): Instance?
+function Child.FromPathOptional(root: Instance, path: { read string }): Instance?
 	local Object = root
 
 	for _, name in path do
@@ -37,7 +37,7 @@ end
     Seeks a child or descendant from a path, waiting for it to exist if it doesn't. Returns nil if the timeout is reached.
 ]=]
 
-function Child.FromPathAsync(root: Instance, path: { string }, timeoutAfter: number?): Instance?
+function Child.FromPathAsync(root: Instance, path: { read string }, timeoutAfter: number?): Instance?
 	local Object = root
 	local Start = os.clock()
 
