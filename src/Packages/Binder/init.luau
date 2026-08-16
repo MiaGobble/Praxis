@@ -11,21 +11,17 @@ Binder.__index = Binder
 local CollectionService = game:GetService("CollectionService")
 
 -- Imports
-local Packages = script:FindFirstChild("roblox_packages")
-	or script:FindFirstChild("Packages")
-	or script.Parent
-
-local Bucket = require(Packages.Bucket)
-local Signal = require(Packages.Signal)
-local TagUtils = require(Packages.TagUtils)
+local Bucket = require("@pkg/Bucket")
+local Signal = require("@pkg/Signal")
+local TagUtils = require("@pkg/TagUtils")
 
 -- Types
 type Class<T> = {
     new: (instance: Instance) -> T,
 }
 
-export type Binder<T> = typeof(setmetatable({}, Binder)) & {
-    Tag: string,
+export type Binder<T> = setmetatable<{
+	Tag: string,
     Class: Class<T>,
     Bound: Signal.Signal<Instance, T>,
     Unbound: Signal.Signal<Instance, T?>,
@@ -34,7 +30,7 @@ export type Binder<T> = typeof(setmetatable({}, Binder)) & {
     Started: boolean,
     Objects: {[Instance]: T},
     ObjectBuckets: {[Instance]: Bucket.Bucket},
-}
+}, typeof(Binder)>
 
 --[=[
     @param tag string
@@ -45,7 +41,7 @@ export type Binder<T> = typeof(setmetatable({}, Binder)) & {
 ]=]
 
 function Binder.new<T>(tag : string, class : Class<T>) : Binder<T>
-    local self : Binder<T> = setmetatable({}, Binder)
+    local self = setmetatable({}, Binder) :: Binder<T>
 
     self.Tag = tag
     self.Class = class
