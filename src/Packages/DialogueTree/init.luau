@@ -243,7 +243,6 @@ function DialogueTree.End(self : DialogueTree, player : Player)
     Session.ShowNext:Destroy()
     Session.Respond:Destroy()
     self.Sessions[player] = nil
-    Session.ShowNext:Fire() -- TODO: verify if this is intentional
 end
 
 --[=[
