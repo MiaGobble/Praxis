@@ -20,7 +20,7 @@ type Class<T> = {
     new: (instance: Instance) -> T,
 }
 
-export type Binder<T> = setmetatable<{
+export type Binder<T> = typeof(setmetatable({} :: {
 	Tag: string,
     Class: Class<T>,
     Bound: Signal.Signal<Instance, T>,
@@ -30,7 +30,7 @@ export type Binder<T> = setmetatable<{
     Started: boolean,
     Objects: {[Instance]: T},
     ObjectBuckets: {[Instance]: Bucket.Bucket},
-}, typeof(Binder)>
+}, Binder))
 
 --[=[
     @param tag string

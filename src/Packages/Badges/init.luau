@@ -177,6 +177,6 @@ end
     @within Badges
 ]=]
 
-Badges.BadgeAwarded = Signal.new<<(Player, BadgeAwardData, BadgeSaveData?)>>()
+Badges.BadgeAwarded = Signal.new() :: Signal.Signal<Player, BadgeAwardData, BadgeSaveData?>
 
 return Badges

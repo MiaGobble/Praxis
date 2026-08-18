@@ -8,10 +8,10 @@ local Bucket = {}
 Bucket.__index = Bucket
 
 -- Types
-export type Bucket = setmetatable<{
+export type Bucket = typeof(setmetatable({} :: {
 	CleanupQueue: {[any]: (any) -> nil},
 	IsCleaning: boolean,
-}, typeof(Bucket)>
+}, Bucket))
 
 -- Constants
 local TABLE_CLEANUP_METHODS = {

@@ -10,7 +10,7 @@ local Bezier = {}
 local ValuePacker = require("@pkg/ValuePacker")
 
 local function LerpComponentValues(StartComponents: { number }, EndComponents: { number }, AlphaValue: number): { number }
-	local LerpedComponents = table.create<<number>>(#StartComponents)
+	local LerpedComponents = table.create(#StartComponents) :: {number}
 
 	for ComponentIndex = 1, #StartComponents do
 		LerpedComponents[ComponentIndex] = StartComponents[ComponentIndex] + (EndComponents[ComponentIndex] - StartComponents[ComponentIndex]) * AlphaValue
@@ -42,7 +42,7 @@ local function UnpackControlPoints(ControlPoints: { any }): ({ { number } }, str
 	end
 
 	local ComponentCount = #FirstPointComponents
-	local UnpackedControlPoints = table.create<<{number}>>(#ControlPoints)
+	local UnpackedControlPoints = table.create(#ControlPoints) :: {{number}}
 	UnpackedControlPoints[1] = FirstPointComponents
 
 	for ControlPointIndex = 2, #ControlPoints do
@@ -209,7 +209,7 @@ function Bezier.Tangent(ControlPoints: { any }, AlphaValue: number): any
 	for ControlPointIndex = 1, CurveDegree do
 		local NextControlPointComponents = UnpackedControlPoints[ControlPointIndex + 1]
 		local CurrentControlPointComponents = UnpackedControlPoints[ControlPointIndex]
-		local DerivativeComponents = table.create<<number>>(#CurrentControlPointComponents)
+		local DerivativeComponents = table.create(#CurrentControlPointComponents) :: {number}
 
 		for ComponentIndex = 1, #CurrentControlPointComponents do
 			DerivativeComponents[ComponentIndex] = (NextControlPointComponents[ComponentIndex] - CurrentControlPointComponents[ComponentIndex]) * CurveDegree
