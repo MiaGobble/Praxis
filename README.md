@@ -30,7 +30,7 @@ Praxis contains the following libraries (with "TBD" ones being planned but not i
 | RateLimiter | Utilities related to rate limiting | https://wally.run/package/miagobble/rate-limiter | https://pesde.dev/packages/miagobble/rate_limiter |
 | Time | Utilities related to time, including for daily rewards | https://wally.run/package/miagobble/time | https://pesde.dev/packages/miagobble/time |
 | Binder | Binds OOP classes to Roblox instances | https://wally.run/package/miagobble/binder | https://pesde.dev/packages/miagobble/binder |
-| Select | Session-style system that binds players to sessions with cleanup and updates | https://wally.run/package/miagobble/select | https://pesde.dev/packages/miagobble/select/ |
+| Select | Used to select singular values from a list of arguments | https://wally.run/package/miagobble/select | https://pesde.dev/packages/miagobble/select/ |
 | Session | Session-style system that binds players to sessions with cleanup and updates | TBD | TBD |
 | Flipbook | Utility for managing flipbooks | TBD | TBD |
 | Hint | Simple interface based on old Roblox `Hint` instance | TBD | TBD |
