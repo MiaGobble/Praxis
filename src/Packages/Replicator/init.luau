@@ -1,3 +1,9 @@
+--[=[
+    @class Replicator
+
+    Server-to-client diff-based replication system.
+]=]
+
 local Replicator = {}
 Replicator.__index = Replicator
 
@@ -35,6 +41,12 @@ local QueuedReplication = {}
 local MainRemote : RemoteEvent = nil
 local RequestAllDataRemote : RemoteEvent = nil
 
+--[=[
+    @server
+
+    Creates a new Replicator instance. Use only on server.
+]=]
+
 function Replicator.new(identifier  : string, baseData : {[string]: any})
 	if OccupiedIdentifiers[identifier] then
 		error(`Identifier '{identifier}' is already in use`)
@@ -53,9 +65,19 @@ function Replicator.new(identifier  : string, baseData : {[string]: any})
 	return self
 end
 
+--[=[
+    Gets the Replicator instance with the given identifier.
+    Returns nil if the Replicator instance does not exist.
+--]=]
+
 function Replicator.getReplicator(identifier : string) : Replicator?
 	return OccupiedIdentifiers[identifier]
 end
+
+--[=[
+    Waits for the Replicator instance with the given identifier to be created.
+    Returns nil if the Replicator instance does not exist after the given time.
+--]=]
 
 function Replicator.waitForReplicator(identifier : string, maxTime : number?) : Replicator?
 	if not maxTime then
@@ -70,6 +92,12 @@ function Replicator.waitForReplicator(identifier : string, maxTime : number?) : 
 
 	return OccupiedIdentifiers[identifier]
 end
+
+--[=[
+    @client
+    
+    Initializes the Replicator system on the client.
+--]=]
 
 function Replicator.initClient()
 	if RunService:IsServer() then
@@ -113,6 +141,12 @@ function Replicator.initClient()
 
 	RequestAllDataRemote:FireServer()
 end
+
+--[=[
+    @server
+    
+    Initializes the Replicator system on the server.
+--]=]
 
 function Replicator.initServer()
 	if RunService:IsClient() then
@@ -172,6 +206,12 @@ function Replicator.initServer()
 	end)
 end
 
+--[=[
+    @server
+    
+    Sets the value of the Replicator instance at the given path, which replicates to all subscribed players.
+--]=]
+
 function Replicator.Set(self : Replicator, path : {string}, value : any)
 	if RunService:IsClient() then
 		error("Replicator:Set() must be called on the server")
@@ -207,9 +247,19 @@ function Replicator.Set(self : Replicator, path : {string}, value : any)
 	end
 end
 
+--[=[
+    Gets the current state of the Replicator instance.
+--]=]
+
 function Replicator.Get(self : Replicator)
 	return table.clone(self.CurrentState)
 end
+
+--[=[
+    @server
+    
+    Subscribes the given player to the Replicator instance.
+--]=]
 
 function Replicator.Subscribe(self : Replicator, player : Player)
 	if RunService:IsClient() then
@@ -230,6 +280,12 @@ function Replicator.Subscribe(self : Replicator, player : Player)
 	})
 end
 
+--[=[
+    @server
+    
+    Unsubscribes the given player from the Replicator instance.
+--]=]
+
 function Replicator.Unsubscribe(self : Replicator, player : Player)
 	if RunService:IsClient() then
 		error("Replicator:Unsubscribe() must be called on the server")
@@ -242,6 +298,12 @@ function Replicator.Unsubscribe(self : Replicator, player : Player)
 	end
 end
 
+--[=[
+    @server
+    
+    Subscribes all players to the Replicator instance.
+--]=]
+
 function Replicator.SubscribeAll(self : Replicator)
 	for _, player in PlayersService:GetPlayers() do
 		self:Subscribe(player)
@@ -251,6 +313,12 @@ function Replicator.SubscribeAll(self : Replicator)
 		self:Subscribe(player)
 	end))
 end
+
+--[=[
+    @server
+    
+    Destroys the Replicator instance.
+--]=]
 
 function Replicator.Destroy(self : Replicator)
 	if RunService:IsClient() then
