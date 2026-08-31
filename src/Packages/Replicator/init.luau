@@ -1,7 +1,7 @@
 --[=[
-    @class Replicator
+	@class Replicator
 
-    Server-to-client diff-based replication system.
+	Server-to-client diff-based replication system.
 ]=]
 
 local Replicator = {}
@@ -42,9 +42,9 @@ local MainRemote : RemoteEvent = nil
 local RequestAllDataRemote : RemoteEvent = nil
 
 --[=[
-    @server
+	@server
 
-    Creates a new Replicator instance. Use only on server.
+	Creates a new Replicator instance. Use only on server.
 ]=]
 
 function Replicator.new(identifier  : string, baseData : {[string]: any})
@@ -66,8 +66,8 @@ function Replicator.new(identifier  : string, baseData : {[string]: any})
 end
 
 --[=[
-    Gets the Replicator instance with the given identifier.
-    Returns nil if the Replicator instance does not exist.
+	Gets the Replicator instance with the given identifier.
+	Returns nil if the Replicator instance does not exist.
 --]=]
 
 function Replicator.getReplicator(identifier : string) : Replicator?
@@ -75,8 +75,8 @@ function Replicator.getReplicator(identifier : string) : Replicator?
 end
 
 --[=[
-    Waits for the Replicator instance with the given identifier to be created.
-    Returns nil if the Replicator instance does not exist after the given time.
+	Waits for the Replicator instance with the given identifier to be created.
+	Returns nil if the Replicator instance does not exist after the given time.
 --]=]
 
 function Replicator.waitForReplicator(identifier : string, maxTime : number?) : Replicator?
@@ -94,9 +94,9 @@ function Replicator.waitForReplicator(identifier : string, maxTime : number?) : 
 end
 
 --[=[
-    @client
-    
-    Initializes the Replicator system on the client.
+	@client
+	
+	Initializes the Replicator system on the client.
 --]=]
 
 function Replicator.initClient()
@@ -143,9 +143,9 @@ function Replicator.initClient()
 end
 
 --[=[
-    @server
-    
-    Initializes the Replicator system on the server.
+	@server
+	
+	Initializes the Replicator system on the server.
 --]=]
 
 function Replicator.initServer()
@@ -207,9 +207,9 @@ function Replicator.initServer()
 end
 
 --[=[
-    @server
-    
-    Sets the value of the Replicator instance at the given path, which replicates to all subscribed players.
+	@server
+	
+	Sets the value of the Replicator instance at the given path, which replicates to all subscribed players.
 --]=]
 
 function Replicator.Set(self : Replicator, path : {string}, value : any)
@@ -248,7 +248,7 @@ function Replicator.Set(self : Replicator, path : {string}, value : any)
 end
 
 --[=[
-    Gets the current state of the Replicator instance.
+	Gets the current state of the Replicator instance.
 --]=]
 
 function Replicator.Get(self : Replicator)
@@ -256,9 +256,9 @@ function Replicator.Get(self : Replicator)
 end
 
 --[=[
-    @server
-    
-    Subscribes the given player to the Replicator instance.
+	@server
+	
+	Subscribes the given player to the Replicator instance.
 --]=]
 
 function Replicator.Subscribe(self : Replicator, player : Player)
@@ -281,9 +281,9 @@ function Replicator.Subscribe(self : Replicator, player : Player)
 end
 
 --[=[
-    @server
-    
-    Unsubscribes the given player from the Replicator instance.
+	@server
+	
+	Unsubscribes the given player from the Replicator instance.
 --]=]
 
 function Replicator.Unsubscribe(self : Replicator, player : Player)
@@ -299,9 +299,9 @@ function Replicator.Unsubscribe(self : Replicator, player : Player)
 end
 
 --[=[
-    @server
-    
-    Subscribes all players to the Replicator instance.
+	@server
+	
+	Subscribes all players to the Replicator instance.
 --]=]
 
 function Replicator.SubscribeAll(self : Replicator)
@@ -315,9 +315,9 @@ function Replicator.SubscribeAll(self : Replicator)
 end
 
 --[=[
-    @server
-    
-    Destroys the Replicator instance.
+	@server
+	
+	Destroys the Replicator instance.
 --]=]
 
 function Replicator.Destroy(self : Replicator)
