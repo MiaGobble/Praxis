@@ -1,0 +1,12 @@
+[package]
+name = "miagobble/replicator"
+version = "1.0.0"
+registry = "https://github.com/UpliftGames/wally-index"
+realm = "shared"
+license = "MIT"
+homepage = "https://praxis.igottic.com/"
+description = "Server-to-client diff-based replication system"
+
+[dependencies]
+SerDes = "miagobble/ser-des@1.0.0"
+Signal = "miagobble/signal@1.0.1"
