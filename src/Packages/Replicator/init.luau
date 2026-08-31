@@ -68,7 +68,7 @@ end
 --[=[
 	Gets the Replicator instance with the given identifier.
 	Returns nil if the Replicator instance does not exist.
---]=]
+]=]
 
 function Replicator.getReplicator(identifier : string) : Replicator?
 	return OccupiedIdentifiers[identifier]
@@ -77,7 +77,7 @@ end
 --[=[
 	Waits for the Replicator instance with the given identifier to be created.
 	Returns nil if the Replicator instance does not exist after the given time.
---]=]
+]=]
 
 function Replicator.waitForReplicator(identifier : string, maxTime : number?) : Replicator?
 	if not maxTime then
@@ -97,7 +97,7 @@ end
 	@client
 	
 	Initializes the Replicator system on the client.
---]=]
+]=]
 
 function Replicator.initClient()
 	if RunService:IsServer() then
@@ -146,7 +146,7 @@ end
 	@server
 	
 	Initializes the Replicator system on the server.
---]=]
+]=]
 
 function Replicator.initServer()
 	if RunService:IsClient() then
@@ -210,7 +210,7 @@ end
 	@server
 	
 	Sets the value of the Replicator instance at the given path, which replicates to all subscribed players.
---]=]
+]=]
 
 function Replicator.Set(self : Replicator, path : {string}, value : any)
 	if RunService:IsClient() then
@@ -249,7 +249,7 @@ end
 
 --[=[
 	Gets the current state of the Replicator instance.
---]=]
+]=]
 
 function Replicator.Get(self : Replicator)
 	return table.clone(self.CurrentState)
@@ -259,7 +259,7 @@ end
 	@server
 	
 	Subscribes the given player to the Replicator instance.
---]=]
+]=]
 
 function Replicator.Subscribe(self : Replicator, player : Player)
 	if RunService:IsClient() then
@@ -284,7 +284,7 @@ end
 	@server
 	
 	Unsubscribes the given player from the Replicator instance.
---]=]
+]=]
 
 function Replicator.Unsubscribe(self : Replicator, player : Player)
 	if RunService:IsClient() then
@@ -302,7 +302,7 @@ end
 	@server
 	
 	Subscribes all players to the Replicator instance.
---]=]
+]=]
 
 function Replicator.SubscribeAll(self : Replicator)
 	for _, player in PlayersService:GetPlayers() do
@@ -318,7 +318,7 @@ end
 	@server
 	
 	Destroys the Replicator instance.
---]=]
+]=]
 
 function Replicator.Destroy(self : Replicator)
 	if RunService:IsClient() then
