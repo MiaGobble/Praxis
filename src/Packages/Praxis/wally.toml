@@ -1,6 +1,6 @@
 [package]
 name = "miagobble/praxis"
-version = "1.0.0"
+version = "1.2.0"
 registry = "https://github.com/UpliftGames/wally-index"
 realm = "shared"
 license = "MIT"
@@ -31,3 +31,4 @@ Time = "miagobble/time@1.0.0"
 TracebackUtils = "miagobble/traceback-utils@1.0.1"
 Typer = "miagobble/typer@0.1.1"
 ValuePacker = "miagobble/value-packer@1.0.0"
+Replicator = "miagobble/replicator@1.0.1"
