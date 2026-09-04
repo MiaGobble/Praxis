@@ -31,6 +31,7 @@ Praxis contains the following libraries (with "TBD" ones being planned but not i
 | Time | Utilities related to time, including for daily rewards | https://wally.run/package/miagobble/time | https://pesde.dev/packages/miagobble/time |
 | Binder | Binds OOP classes to Roblox instances | https://wally.run/package/miagobble/binder | https://pesde.dev/packages/miagobble/binder |
 | Select | Used to select singular values from a list of arguments | https://wally.run/package/miagobble/select | https://pesde.dev/packages/miagobble/select/ |
+| Replicator | Server-to-client diff-based replication system | https://wally.run/package/miagobble/replicator | https://pesde.dev/packages/miagobble/replicator/ |
 | Session | Session-style system that binds players to sessions with cleanup and updates | TBD | TBD |
 | Flipbook | Utility for managing flipbooks | TBD | TBD |
 | Hint | Simple interface based on old Roblox `Hint` instance | TBD | TBD |

@@ -27,5 +27,6 @@ Praxis.Input = require("@pkg/Input")
 Praxis.RateLimiter = require("@pkg/RateLimiter")
 Praxis.Time = require("@pkg/Time")
 Praxis.Binder = require("@pkg/Binder")
+Praxis.Replicator = require("@pkg/Replicator")
 
 return Praxis
