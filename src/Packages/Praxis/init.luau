@@ -31,5 +31,6 @@ Praxis.Input = require(Packages.Input)
 Praxis.RateLimiter = require(Packages.RateLimiter)
 Praxis.Time = require(Packages.Time)
 Praxis.Binder = require(Packages.Binder)
+Praxis.Replicator = require(Packages.Replicator)
 
 return Praxis
