@@ -42,13 +42,14 @@ function Child.FromPathAsync(root: Instance, path: { string }, timeoutAfter: num
 	local Start = os.clock()
 
 	for _, name in path do
-		local Discovery = if timeoutAfter
-			then Object:WaitForChild(name, timeoutAfter - (os.clock() - Start))
-			else Object:WaitForChild(name)
+		local remainingTime = if timeoutAfter then timeoutAfter - (os.clock() - Start) else nil
 
-		if not Discovery then
-			return nil
-		end
+		-- Abort immediately if time budget has ran out.
+		-- WaitForChild also throws if timeOut is not greater than 0.
+		if remainingTime and remainingTime <= 0 then return nil end
+
+		local Discovery = Object:WaitForChild(name, timeoutAfter)
+		if not Discovery then return nil end
 
 		Object = Discovery
 	end
