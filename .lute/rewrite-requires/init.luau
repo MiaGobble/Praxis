@@ -37,6 +37,9 @@ const HELP_MESSAGE = `\z
 	\n    {ansi.colorForeground("lute rewrite-requires -i src/ -o dist/ -a \"pkg=roblox_packages/\" -r \"pkg=pesde.toml\"", "Cyan")}\z
 	\n\z
 	\n    {ansi.colorForeground(ansi.italic("# Wally Build (Praxis)"), "Bright Black")}\z
+	\n    {ansi.colorForeground("lute rewrite-requires -i src/ -o dist/ -a \"pkg=./\" -r \"pkg=wally.toml\"", "Cyan")} {ansi.colorForeground(ansi.italic("# Wally creates .lua files that link to the dependencies"), "Bright Black")}\z
+	\n\z
+	\n    {ansi.colorForeground(ansi.italic("# Standalone Build (Praxis)"), "Bright Black")}\z
 	\n    {ansi.colorForeground("lute rewrite-requires -i src/ -o dist/ -a \"pkg=../\" -r \"pkg=wally.toml\"", "Cyan")} {ansi.colorForeground(ansi.italic("# Wally creates .lua files that link to the dependencies"), "Bright Black")}\z
 `
 
