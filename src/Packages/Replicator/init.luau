@@ -8,13 +8,13 @@ local Replicator = {}
 Replicator.__index = Replicator
 
 -- Types
-export type Replicator = typeof(setmetatable({}, Replicator)) & {
+export type Replicator = typeof(setmetatable({} :: {
 	Name : string,
 	CurrentState : {[string]: any},
 	Changed : RBXScriptSignal & {Fire : () -> nil},
 	SubscribedPlayers : {Player},
 	Connections : {RBXScriptConnection},
-}
+}, Replicator))
 
 export type Diff = {
 	Path : {string},
@@ -29,11 +29,8 @@ local RunService = game:GetService("RunService")
 local PlayersService = game:GetService("Players")
 
 -- Imports
-local Packages = script:FindFirstChild("roblox_packages")
-	or script:FindFirstChild("Packages")
-	or script.Parent
-local SerDes = require(Packages.SerDes)
-local Signal = require(Packages.Signal)
+local SerDes = require("@pkg/SerDes")
+local Signal = require("@pkg/Signal")
 
 -- Variables
 local OccupiedIdentifiers = {}
