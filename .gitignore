@@ -16,3 +16,8 @@ lune_packages/
 .pesde/
 pesde.lock
 package.tar.gz
+
+# dist builds
+dist/
+pesde-dist/
+wally-dist/
