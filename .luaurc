@@ -1,5 +1,5 @@
 {
-    "languageMode": "strict", 
+    "languageMode": "nonstrict", 
     "aliases": {
         "pkg": "src/Packages"
     }
