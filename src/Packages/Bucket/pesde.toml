@@ -1,5 +1,5 @@
 name = "miagobble/bucket"
-version = "1.0.5"
+version = "1.0.7"
 description = "Used for cleanup of various data types and instances."
 license = "MIT"
 authors = ["Mia Gobble (https://praxis.igottic.com/)"]

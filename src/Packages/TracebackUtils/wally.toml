@@ -1,6 +1,6 @@
 [package]
 name = "miagobble/traceback-utils"
-version = "1.0.1"
+version = "1.0.3"
 registry = "https://github.com/UpliftGames/wally-index"
 realm = "shared"
 license = "MIT"

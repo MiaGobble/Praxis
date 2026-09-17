@@ -1,5 +1,5 @@
 name = "miagobble/data_store"
-version = "1.0.2"
+version = "1.0.3"
 description = "Wrapper utilities around Roblox DataStoreService with retry support and ser/des for any type."
 license = "MIT"
 authors = ["Mia Gobble (https://praxis.igottic.com/)"]

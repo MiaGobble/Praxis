@@ -1,5 +1,5 @@
 name = "miagobble/symbol"
-version = "1.0.2"
+version = "1.0.4"
 description = "Blank userdata that can be converted into a string."
 license = "MIT"
 authors = ["Mia Gobble (https://praxis.igottic.com/)"]

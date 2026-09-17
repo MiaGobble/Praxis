@@ -1,5 +1,5 @@
 name = "miagobble/select"
-version = "1.0.0"
+version = "1.0.2"
 description = "Used to select singular values from a list of arguments."
 license = "MIT"
 authors = ["Mia Gobble (https://praxis.igottic.com/)"]

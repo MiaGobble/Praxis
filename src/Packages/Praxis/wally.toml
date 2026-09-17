@@ -1,6 +1,6 @@
 [package]
 name = "miagobble/praxis"
-version = "1.2.0"
+version = "1.2.2"
 registry = "https://github.com/UpliftGames/wally-index"
 realm = "shared"
 license = "MIT"

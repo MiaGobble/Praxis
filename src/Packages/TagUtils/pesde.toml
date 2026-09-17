@@ -1,5 +1,5 @@
 name = "miagobble/tag_utils"
-version = "1.0.1"
+version = "1.0.3"
 description = "Wrapper for collection service to make it easier to work with tags."
 license = "MIT"
 authors = ["Mia Gobble (https://praxis.igottic.com/)"]

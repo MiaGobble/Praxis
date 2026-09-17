@@ -1,5 +1,5 @@
 name = "miagobble/dialogue_tree"
-version = "1.0.0"
+version = "1.0.2"
 description = "Backend code to process dialogue trees, with built-in functionality for sessions and memory. Uses signals to communicate with the front-end."
 license = "MIT"
 authors = ["Mia Gobble (https://praxis.igottic.com/)"]

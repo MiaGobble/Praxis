@@ -1,5 +1,5 @@
 name = "miagobble/child"
-version = "1.0.0"
+version = "1.0.2"
 description = "Finds children of an instance by path."
 license = "MIT"
 authors = ["Mia Gobble (https://praxis.igottic.com/)"]

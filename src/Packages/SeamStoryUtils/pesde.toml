@@ -1,5 +1,5 @@
 name = "miagobble/seam_story_utils"
-version = "0.1.3"
+version = "0.1.5"
 description = "Utilities for hooking up Seam to UI Labs for UI stories."
 license = "MIT"
 authors = ["Mia Gobble (https://praxis.igottic.com/)"]

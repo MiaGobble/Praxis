@@ -1,5 +1,5 @@
 name = "miagobble/replicator"
-version = "1.0.1"
+version = "1.0.3"
 description = "Server-to-client diff-based replication system"
 license = "MIT"
 authors = ["Mia Gobble (https://praxis.igottic.com/)"]
