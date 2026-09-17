@@ -9,7 +9,7 @@ const colorOutput = require("@self/color-output")
 
 const DIR_WALK_RECURSIVE: fs.WalkOptions = {recursive = true}
 
-const PATH_DIR_PATTERN = "[%w_%.%-%s/\\]+"
+const PATH_DIR_PATTERN = "[:%w_%.%-%s/\\]+"
 const BASIC_ALIAS_PATTERN = "[%W_%.%-%S]+"
 
 -- CLI --
@@ -26,18 +26,22 @@ const HELP_MESSAGE = `\z
 	\n                                    {ansi.italic("Example: -a pkg=roblox_packages/")}\z
 	\n    -r, --retarget <aliases...>     Enables require retargeting on the specified aliases, in the form alias=path.\z
 	\n                                    Resolves target paths by relative location from the nearest matching file.\z
+	\n                                    Supports both absolute (prefix path with 'abs:') and relative ('rel:') targets, defaulting to relative.\z
 	\n                                    Separate aliases with semicolon (;).\z
 	\n                                    {ansi.italic("Example: -r pkg=pesde.toml")}\z
 	\n    -v, --verbose                   Verbose debug message output.\z
 	\n    --continue                      Continue processing on non-fatal errors.\z
 	\n    --dry-run                       Run the process without making changes to files.\z
 	\n                                    Use with --verbose to review changes.\z
-	\nUsage Examples:\z
+	\nUsage Examples (Praxis):\z
 	\n    {ansi.colorForeground(ansi.italic("# Pesde Build"), "Bright Black")}\z
 	\n    {ansi.colorForeground("lute rewrite-requires -i src/ -o dist/ -a \"pkg=roblox_packages/\" -r \"pkg=pesde.toml\"", "Cyan")}\z
 	\n\z
-	\n    {ansi.colorForeground(ansi.italic("# Wally Build (Praxis)"), "Bright Black")}\z
+	\n    {ansi.colorForeground(ansi.italic("# Wally Build"), "Bright Black")}\z
 	\n    {ansi.colorForeground("lute rewrite-requires -i src/ -o dist/ -a \"pkg=../\" -r \"pkg=wally.toml\"", "Cyan")} {ansi.colorForeground(ansi.italic("# Wally creates .lua files that link to the dependencies"), "Bright Black")}\z
+	\n\z
+	\n    {ansi.colorForeground(ansi.italic("# Standalone Build"), "Bright Black")}\z
+	\n    {ansi.colorForeground("lute rewrite-requires -i src/ -o dist/ -a \"pkg=../\" -r \"pkg=abs:src/Packages\"", "Cyan")}\z
 `
 
 const function unhandled(a: never): ()
@@ -46,7 +50,9 @@ const function unhandled(a: never): ()
 end
 
 type Aliases = { [string]: string? }
-type Retargets = { [string]: string? }
+type Retargets = {
+	[string]: {to: string, absolute: boolean}?
+}
 
 type CLIOptions = {
 	help: true?,
@@ -104,8 +110,22 @@ const function parseArgs(args: {string}): (CLIOptions)
 		elseif arg == "-r" or arg == "--retarget" then
 			i += 1
 
-			for alias, root in string.gmatch(args[i], `@?({BASIC_ALIAS_PATTERN})=({PATH_DIR_PATTERN});?`) do
-				retargets[alias] = root
+			for alias, target in string.gmatch(args[i], `@?({BASIC_ALIAS_PATTERN})=({PATH_DIR_PATTERN});?`) do
+				const modeStr = string.match(target, "^%a+:")
+				const absMode: boolean? =
+					if modeStr == "abs:" then true
+					elseif modeStr == "rel:" then false
+					else nil
+
+				-- Remove the mode prefix from the target
+				if modeStr and absMode ~= nil then
+					target = string.sub(target, #modeStr + 1)
+				end
+
+				retargets[alias] = {
+					to = target,
+					absolute = absMode == true
+				}
 			end
 		elseif arg == "-v" or arg == "--verbose" then
 			opts.verbose = true
@@ -175,25 +195,25 @@ end
 --- Cache of found nearest retargets keyed by directory paths.
 const packageRootCache: {[string]: path.Path?} = {}
 
-const function resolvePackageRoot(initMode: boolean, scriptDir: path.Pathlike, initDir: path.Pathlike, search: path.Pathlike): (path.Path?)
-	const scriptDirStr = path.format(scriptDir)
-	const cached = packageRootCache[scriptDirStr]
+const function resolvePackageRoot(initMode: boolean, fileDir: path.Pathlike, scriptDir: path.Pathlike, search: path.Pathlike): (path.Path?)
+	const fileDirStr = path.format(fileDir)
+	const cached = packageRootCache[fileDirStr]
 	if cached then return cached end
 
 	const searches = {search}
 
 	-- Special case for init scripts, also search immediate children (@self requires).
 	local found: path.Pathlike? = initMode
-		and fileUtils.findFirstDown(initDir, searches)
-		or fileUtils.findFirstUp(scriptDir, searches)
+		and fileUtils.findFirstDown(scriptDir, searches)
+		or fileUtils.findFirstUp(fileDir, searches)
 
 	if not found then return nil end
 
-	const relative = path.normalize(path.relative(scriptDir, path.dirname(found)))
-	packageRootCache[scriptDirStr] = relative
+	const relative = path.normalize(path.relative(fileDir, path.dirname(found)))
+	packageRootCache[fileDirStr] = relative
 
 	-- Cache every path that will also use this root
-	local cachePath = scriptDirStr
+	local cachePath = fileDirStr
 	for _, part in relative.parts do
 		cachePath ..= "/" .. part
 		packageRootCache[cachePath] = relative
@@ -239,8 +259,8 @@ const function processFile(filePath: path.Pathlike, dest: path.Pathlike, aliases
 	const baseName = path.basename(filePath)
 	if not baseName then colorOutput.fatal(`Unexpectedly failed to get basename of '{filePath}'`) end
 
-	const scriptDir = path.dirname(filePath)
-	const initDir = fileUtils.scriptDirectory(filePath) :: path.Path
+	const fileDir = path.dirname(filePath)
+	const scriptDir = fileUtils.scriptDirectory(filePath) :: path.Path
 	const initMode = fileUtils.isInitScript(filePath)
 
 	const transformOk, transformedSource = transform.stringRequires(source, function(target): string?
@@ -250,14 +270,14 @@ const function processFile(filePath: path.Pathlike, dest: path.Pathlike, aliases
 		-- Skip non-alias targets (nothing to transform)
 		if not alias then return nil end
 		
-		const retargetFile = retargets[alias]
+		const retarget = retargets[alias]
 		const sub = aliases[alias]
 
 		-- Resolve alias and rest to use
 		local rAlias: string, rRest: string
 		if not sub then
 			-- Skip processing if there's no operation defined (no replacement nor retargeting)
-			if not retargetFile then return nil end
+			if not retarget then return nil end
 
 			rAlias, rRest = alias, rest
 		else
@@ -272,18 +292,30 @@ const function processFile(filePath: path.Pathlike, dest: path.Pathlike, aliases
 			end
 		end
 
-		const redirPath = retargetFile and resolvePackageRoot(initMode, scriptDir, initDir, retargetFile)
-		local replacement: path.Pathlike
-		if redirPath then
-			const redirPathStr = path.format(redirPath)
+		local replacement: path.Path
+		if retarget then
+			const to = retarget.to
+			const absMode = retarget.absolute
+			const redirPath = if absMode
+				then path.relative(scriptDir, to)
+				else resolvePackageRoot(initMode, fileDir, scriptDir, to)
 
-			-- There's probably a better way to do this, but it seems to work.
-			if initMode and string.sub(redirPathStr, 1, 1) == "." then
-				replacement = path.normalize(path.join("@self", rRest))
-			elseif initMode and string.sub(redirPathStr, 1, 2) == ".." then
-				replacement = "./" .. path.format(path.normalize(rRest))
+			if redirPath then
+				const parts = redirPath.parts
+				const first = parts[1]
+
+				if initMode and not first then -- Child
+					replacement = path.normalize(path.join("@self", rRest))
+				elseif (initMode or absMode) and first == ".." then
+					-- Skip the first .. part
+					table.insert(parts, rRest)
+					replacement = path.normalize(path.join(table.unpack(parts, 2)))
+				else
+					replacement = path.normalize(path.join(rAlias, redirPath or "", rRest))
+				end
 			else
-				replacement = path.normalize(path.join(rAlias, redirPath or "", rRest))
+				colorOutput.warn(`Failed to retarget {targetText} to {to} (couldn't find file)`)
+				replacement = path.normalize(path.join(rAlias, rRest))
 			end
 		else
 			replacement = path.normalize(path.join(rAlias, rRest))
@@ -300,8 +332,9 @@ const function processFile(filePath: path.Pathlike, dest: path.Pathlike, aliases
 			end
 		end
 
+		-- Return nil to leave original completely untouched
 		if replacementText == targetText then return nil end
-		
+
 		requireCount += 1
 		if verbose then colorOutput.verbose(`    {ansi.underline(targetText)} → {ansi.underline(replacementText)}`) end
 
