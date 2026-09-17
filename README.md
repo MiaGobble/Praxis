@@ -49,4 +49,4 @@ Need support, want to leave suggestions, or chat about Praxis? Join this Discord
 <!--moonwave-hide-after-this-line-->
 
 # SCDS Rating
-<img src="./.moonwave/static/fib.png" alt="Alt Text" width="175.5" height="167.75">
+<img src="./.moonwave/static/oib.png" alt="SCDS OIB Rating" width="175.5" height="167.75">
