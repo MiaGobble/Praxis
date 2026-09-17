@@ -14,16 +14,14 @@ local SERIALS_KEY_PREFIX = "Badge_"
 local BadgeService = game:GetService("BadgeService")
 local RunService = game:GetService("RunService")
 
--- Imports
-local Packages = script:FindFirstChild("roblox_packages")
-	or script:FindFirstChild("Packages")
-	or script.Parent
-
-local Signal = require(Packages.Signal)
-local DataStore = require(Packages.DataStore)
+-- Import
+local Signal = require("@pkg/Signal")
+local DataStore = require("@pkg/DataStore")
 
 if RunService:IsClient() then
-    return {}
+	-- Note: Returns an empty table at this point, but we should not return a new empty table literal as the type solver
+	-- won't be able to figure out the types.
+    return Badges
 end
 
 -- Variables
@@ -117,7 +115,7 @@ function Badges.AwardBadge(Player : Player, BadgeId : number, BadgeSaveData : Ba
         error("BadgeService.AwardBadge failed: " .. tostring(AwardError))
     end
 
-    local SerialData = DataStore.Update(SerialDataStore, SERIALS_KEY_PREFIX .. tostring(BadgeId), function(SaveData)
+    local SerialData = DataStore.Update(SerialDataStore, SERIALS_KEY_PREFIX .. tostring(BadgeId), function(SaveData: { Value: number }): { Value: number }
         SaveData.Value += 1
         return SaveData
     end)
@@ -179,6 +177,6 @@ end
     @within Badges
 ]=]
 
-Badges.BadgeAwarded = Signal.new()
+Badges.BadgeAwarded = Signal.new() :: Signal.Signal<Player, BadgeAwardData, BadgeSaveData?>
 
 return Badges

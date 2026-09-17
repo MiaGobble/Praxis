@@ -10,23 +10,19 @@ Keyboard.__index = Keyboard
 -- Services
 local UserInputService = game:GetService("UserInputService")
 
--- Imports
-local Packages = script.Parent:FindFirstChild("roblox_packages")
-	or script.Parent:FindFirstChild("Packages")
-	or script.Parent.Parent
-
-local Signal = require(Packages.Signal)
-local Bucket = require(Packages.Bucket)
+-- Import
+local Signal = require("@pkg/Signal")
+local Bucket = require("@pkg/Bucket")
 
 -- Types
-type Keyboard = typeof(setmetatable({}, Keyboard)) & {
+type Keyboard = typeof(setmetatable({} :: {
     _Bucket : Bucket.Bucket,
     KeyDown : Signal.Signal<Enum.KeyCode, boolean>,
     KeyUp : Signal.Signal<Enum.KeyCode, boolean>,
-}
+}, Keyboard))
 
-function Keyboard.new()
-    local self : Keyboard = setmetatable({}, Keyboard)
+function Keyboard.new(): (Keyboard)
+    local self = setmetatable({}, Keyboard) :: Keyboard
 
     self._Bucket = Bucket.new()
 

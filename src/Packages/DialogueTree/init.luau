@@ -30,11 +30,7 @@ export type Dialogue = {
 }
 
 -- Imports
-local Packages = script:FindFirstChild("roblox_packages")
-    or script:FindFirstChild("Packages")
-    or script.Parent
-
-local Signal = require(Packages.Signal)
+local Signal = require("@pkg/Signal")
 
 -- Types Extended
 export type Session = {
@@ -84,9 +80,9 @@ local function ProcessTextAsync(self : DialogueTree, player : Player, forcedText
 
         if Session.TextProcessMetadata.Index == #Text then
             Session.TextProcessMetadata = nil
-            Session.ShowNext:Fire(Text[#Text], ProcessOptions())
+            Session.ShowNext:Fire(Text[#Text] :: string, ProcessOptions())
         else
-            Session.ShowNext:Fire(Text[Session.TextProcessMetadata.Index], ProcessOptions())
+            Session.ShowNext:Fire(Text[Session.TextProcessMetadata.Index] :: string, ProcessOptions())
         end
     elseif typeof(Text) == "function" then
         ProcessTextAsync(self, player, Text(self, player))
@@ -174,7 +170,7 @@ end
 ]=]
 
 function DialogueTree.new(Dialogue : Dialogue) : DialogueTree
-    local self : DialogueTree = setmetatable({}, DialogueTree)
+    local self = setmetatable({}, DialogueTree) :: DialogueTree
 
     self.Sessions = {}
     self.Dialogue = Dialogue
@@ -210,8 +206,9 @@ end
 
 function DialogueTree.Converse(self : DialogueTree, player : Player, memory : DialogueMemory?) : Signal.Signal<string, Options>
     if self.Sessions[player] then
+		-- Note: This should probably error instead, but I am preserving the original behavior here.
         warn(`Attempted to start session when player {player} already has active session`)
-        return
+		return nil :: any
     end
 
     local Session : Session = {
@@ -222,7 +219,7 @@ function DialogueTree.Converse(self : DialogueTree, player : Player, memory : Di
         TextProcessMetadata = nil,
     }
 
-    task.defer(ProcessTextAsync, self, player)
+    task.defer(ProcessTextAsync, self, player, nil)
 
     self.Sessions[player] = Session
 
@@ -246,7 +243,6 @@ function DialogueTree.End(self : DialogueTree, player : Player)
     Session.ShowNext:Destroy()
     Session.Respond:Destroy()
     self.Sessions[player] = nil
-    Session.ShowNext:Fire()
 end
 
 --[=[

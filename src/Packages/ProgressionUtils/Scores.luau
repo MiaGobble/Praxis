@@ -1,18 +1,18 @@
 local Scores = {}
 
 -- Imports
-local Packages = script.Parent:FindFirstChild("roblox_packages")
-	or script.Parent:FindFirstChild("Packages")
-	or script.Parent.Parent
-local Signal = require(Packages.Signal)
-local Typer = require(Packages.Typer)
-local Boosters = require(script.Parent.Boosters)
+local Signal = require("@pkg/Signal")
+local Typer = require("@pkg/Typer")
+local Boosters = require("./Boosters")
 
 Scores.OnScoreAdded = Signal.new()
 Scores.OnScoreRemoved = Signal.new()
 
-Scores.SetScore = nil -- Set with DeclareSetScoreCallback
-Scores.GetScore = nil -- Set with DeclareGetScoreCallback
+--- Set with DeclareSetScoreCallback
+Scores.SetScore = (nil :: any) :: ((Player, string, number) -> ())
+
+--- Set with DeclareGetScoreCallback
+Scores.GetScore = (nil :: any) :: ((Player, string) -> (number))
 
 local function AssertScoreCallbacks()
     Typer.TupleAssertion("function", "function")(Scores.SetScore, Scores.GetScore)
@@ -45,7 +45,7 @@ end
 function Scores.AddScoreForPlayer(Player : Player, ScoreType : string, AddedAmount : number)
     AssertScoreCallbacks()
     AssertScoreAsNumber(AddedAmount)
-
+	
     local ExistingScore = Scores.GetScore(Player, ScoreType)
 
     AssertScoreAsNumber(ExistingScore)
@@ -86,7 +86,7 @@ function Scores.RemoveScoreForPlayer(Player : Player, ScoreType : string, Remove
     Scores.OnScoreRemoved:Fire(Player, ScoreType, RemovedAmount)
 end
 
-function Scores.HasAtLeast(Player : Player, ScoreType : number, Minimum : number) : boolean
+function Scores.HasAtLeast(Player : Player, ScoreType : string, Minimum : number) : boolean
     AssertScoreCallbacks()
     AssertScoreAsNumber(Minimum)
 

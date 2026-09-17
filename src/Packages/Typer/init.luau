@@ -37,7 +37,7 @@ function Typer.Static(CallbackFunction : (any?) -> any?)
 		return self
 	end
 	
-	function self.Asserted()
+	function self.Asserted(): ((...any) -> (...any?))?
 		if ParameterAssertion and ReturnAssertion then
 			return function(...)
 				local Args = {...}
@@ -50,7 +50,7 @@ function Typer.Static(CallbackFunction : (any?) -> any?)
 
 				if ReturnAssertion then
 					local Success, Output = pcall(function()
-						ReturnAssertion(unpack(ReturnedValues))
+						(ReturnAssertion :: any)(unpack(ReturnedValues))
 					end)
 
 					if not Success then
@@ -82,8 +82,8 @@ end
 	@return (... : string) : any -- The casting method
 ]=]
 
-function Typer.Cast(Value : any) : () -> any
-	return function(... : string) : any
+function Typer.Cast<T>(Value : T) : (...string) -> T
+	return function(... : string) : T
 		if not table.find({...}, typeof(Value)) then
 			error(`Expected casted Value to be a {table.concat({...}, ", or ")}, instead got a {typeof(Value)} type`)
 		end

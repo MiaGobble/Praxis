@@ -8,10 +8,10 @@ local Bucket = {}
 Bucket.__index = Bucket
 
 -- Types
-export type Bucket = typeof(setmetatable({}, Bucket)) & {
+export type Bucket = typeof(setmetatable({} :: {
 	CleanupQueue: {[any]: (any) -> nil},
 	IsCleaning: boolean,
-}
+}, Bucket))
 
 -- Constants
 local TABLE_CLEANUP_METHODS = {
@@ -28,13 +28,9 @@ local CLEANUP_METHOD_NAMES = {
 }
 
 -- Imports
-local Packages = script:FindFirstChild("roblox_packages")
-	or script:FindFirstChild("Packages")
-	or script.Parent
+local Typer = require("@pkg/Typer")
 
-local Typer = require(Packages.Typer)
-
-local function GetMatchingCleanupCallback(Object : any, CleanupMethodName : string?) : () -> nil
+local function GetMatchingCleanupCallback(Object : any, CleanupMethodName : string?): ((() -> (nil)) | ((Object) -> (nil)))
 	local ThisType = typeof(Object)
 
 	if ThisType == "function" then
@@ -42,6 +38,7 @@ local function GetMatchingCleanupCallback(Object : any, CleanupMethodName : stri
 	elseif ThisType == "thread" then
 		return function()
 			task.cancel(Object)
+			return nil
 		end
 	end
 
@@ -93,7 +90,7 @@ end
 ]=]
 
 function Bucket.new() : Bucket
-	local self : Bucket = setmetatable({}, Bucket)
+	local self = setmetatable({}, Bucket) :: Bucket
 
 	self.CleanupQueue = {}
 	self.IsCleaning = false

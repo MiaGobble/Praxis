@@ -14,18 +14,18 @@ local Child = {}
     Seeks a child or descendant from a path, returning nil if it doesn't exist.
 ]=]
 
-function Child.FromPathOptional(root : Instance, path : {string}) : Instance
-    local Object = root
+function Child.FromPathOptional(root: Instance, path: { string }): Instance?
+	local Object = root
 
-    for _, name in path do
-     Object = Object:FindFirstChild(name)
+	for _, name in path do
+		Object = Object:FindFirstChild(name)
 
-        if not Object then
-            return nil
-        end   
-    end
+		if not Object then
+			return nil
+		end
+	end
 
-    return Object
+	return Object
 end
 
 --[=[
@@ -37,31 +37,24 @@ end
     Seeks a child or descendant from a path, waiting for it to exist if it doesn't. Returns nil if the timeout is reached.
 ]=]
 
-function Child.FromPathAsync(root : Instance, path : {string}, timeoutAfter : number?) : Instance?
-    local Object = root
-    local Start = os.clock()
+function Child.FromPathAsync(root: Instance, path: { string }, timeoutAfter: number?): Instance?
+	local Object = root
+	local Start = os.clock()
 
-    if not timeoutAfter then
-        timeoutAfter = math.huge
-    end
+	for _, name in path do
+		local remainingTime = if timeoutAfter then timeoutAfter - (os.clock() - Start) else nil
 
-    for _, name in path do
-        local Discovery = nil
+		-- Abort immediately if time budget has ran out.
+		-- WaitForChild also throws if timeOut is not greater than 0.
+		if remainingTime and remainingTime <= 0 then return nil end
 
-        repeat
-            Discovery = Object:FindFirstChild(name)
-            
-            if not Discovery then
-                task.wait()
-            end
-        until Discovery or os.clock() - Start > timeoutAfter
+		local Discovery = Object:WaitForChild(name, timeoutAfter)
+		if not Discovery then return nil end
 
-        if not Discovery then
-            return
-        end
-    end
+		Object = Discovery
+	end
 
-    return Object
+	return Object
 end
 
 return Child

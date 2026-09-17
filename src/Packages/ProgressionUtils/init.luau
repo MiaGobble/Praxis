@@ -7,10 +7,10 @@
 local ProgressionUtils = {}
 
 -- Imports
-local Quests = require(script.Quests)
-local Scores = require(script.Scores)
-local Boosters = require(script.Boosters)
-local Inventory = require(script.Inventory)
+local Quests = require("@self/Quests")
+local Scores = require("@self/Scores")
+local Boosters = require("@self/Boosters")
+local Inventory = require("@self/Inventory")
 
 --[=[
     Utilities for managing quest data and progress.

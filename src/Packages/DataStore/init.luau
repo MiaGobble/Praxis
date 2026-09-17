@@ -15,7 +15,7 @@ local RunService = game:GetService("RunService")
 local DataStoreService = game:GetService("DataStoreService")
 
 -- Imports
-local SerDes = require(script.Parent.SerDes)
+local SerDes = require("@pkg/SerDes")
 
 -- Types
 export type SaveTable = {[any] : any}
@@ -33,7 +33,9 @@ export type StoreHandle = Config & {
 }
 
 if RunService:IsClient() then
-    return {}
+	-- Note: Returns an empty table at this point, but we should not return a new empty table literal as the type solver
+	-- won't be able to figure out the types.
+    return DataStore
 end
 
 local function Retry(OperationName : string, Callback : () -> any, MaxRetries : number?, RetryDelaySeconds : number?)

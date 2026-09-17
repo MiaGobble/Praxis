@@ -4,11 +4,7 @@ local Quests = {}
 local HttpService = game:GetService("HttpService")
 
 -- Imports
-local Packages = script.Parent:FindFirstChild("roblox_packages")
-	or script.Parent:FindFirstChild("Packages")
-	or script.Parent.Parent
-local Signal = require(Packages.Signal)
-local Types = require(script.Parent.Types)
+local Signal = require("@pkg/Signal")
 
 -- Types extended
 export type QuestData = {
@@ -39,16 +35,16 @@ export type QuestProgress = {
 }
 
 export type Quest = QuestData & {
-    OnStepIncrement : Types.Signal<Player, number>,
-    OnStart : Types.Signal<Player>,
-    OnComplete : Types.Signal<Player>,
-    OnStepComplete : Types.Signal<Player>,
+    OnStepIncrement : Signal.Signal<Player, number>,
+    OnStart : Signal.Signal<Player>,
+    OnComplete : Signal.Signal<Player>,
+    OnStepComplete : Signal.Signal<Player>,
 
     Start : (Player : Player, ExistingProgress : QuestProgress) -> QuestProgress,
     MakeProgress : (Player : Player, ExistingProgress : QuestProgress, StepProgressed : number, AmountProgressed : number) -> QuestProgress,
 }
 
-local function RequireIndexes(Table : {[any] : any}, Indexes : {any}, ObjectPrefix : string)
+local function RequireIndexes(Table : {[any] : any} | {}, Indexes : {any}, ObjectPrefix : string)
     for _, RequiredIndex in Indexes do
         if Table[RequiredIndex] == nil then
             error(`{ObjectPrefix} requires index {RequiredIndex}`)
@@ -57,7 +53,7 @@ local function RequireIndexes(Table : {[any] : any}, Indexes : {any}, ObjectPref
 end
 
 function Quests.MakeQuest(QuestData : QuestData) : Quest
-    local Quest : Quest = table.clone(QuestData)
+    local Quest = table.clone(QuestData) :: Quest
 
     RequireIndexes(QuestData, {"QuestId", "RequireStepsInOrder", "QuestSteps"}, "Quest")
     RequireIndexes(QuestData.QuestSteps, {1}, "Quest.QuestSteps")

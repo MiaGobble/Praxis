@@ -30,8 +30,8 @@ function Connection.Disconnect(self : Connection)
 
 	self.Connected = false
 
-	if self._Signal._HandlerListHead == self then
-		self._Signal._HandlerListHead = self._Next
+	if (self :: any)._Signal._HandlerListHead == self then
+		self._Signal._HandlerListHead = (self :: any)._Next
 	else
 		local prev = self._Signal._HandlerListHead
 
@@ -40,7 +40,7 @@ function Connection.Disconnect(self : Connection)
 		end
 
 		if prev then
-			prev._Next = self._Next
+			prev._Next = (self :: any)._Next
 		end
 	end
 end

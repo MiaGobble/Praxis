@@ -1,0 +1,6 @@
+{
+    "languageMode": "nonstrict", 
+    "aliases": {
+        "pkg": "src/Packages"
+    }
+}

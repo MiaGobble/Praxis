@@ -23,7 +23,10 @@ Initializer.Config = {
     }
 }
 
-local function ThrowWarning(WarningType : "NoInitFunction" | "NotAModule" | "ErrorThrown" | "NotATableModule" | "AlreadyInitialized" | "NoOrderDefined", WarningMessage : string)
+-- We could use keyof<typeof(Initializer.Config.ThrownWarnings)> if old solver compatibility is not a requirement
+type WarningType = "NoInitFunction" | "NotAModule" | "ErrorThrown" | "NotATableModule" | "AlreadyInitialized" | "NoOrderDefined"
+
+local function ThrowWarning(WarningType : WarningType, WarningMessage : string)
     if not Initializer.Config.ThrownWarnings[WarningType] then
         return
     end
@@ -60,14 +63,14 @@ end
     @param Object Instance -- The module being initialized
 ]=]
 
-function Initializer.InitModuleAsync(Object : Instance)
+function Initializer.InitModuleAsync(Object : ModuleScript)
     if not Object:IsA("ModuleScript") then
         ThrowWarning("NotAModule", `Attempt to initialize non-module ({Object:GetFullName()})`)
         return
     end
 
     local DidRequire, Module = pcall(function()
-        return require(Object)
+        return require(Object) :: any
     end)
 
     if not DidRequire then
@@ -117,7 +120,7 @@ end
 ]=]
 
 function Initializer.InitFolderAsync(Folder : Instance)
-    for _, Child : Instance in Folder:GetChildren() do
+    for _, Child: ModuleScript in Folder:GetChildren() do
         Initializer.InitModuleAsync(Child)
     end
 end
@@ -144,7 +147,7 @@ function Initializer.InitOrderedFolderAsync(Folder : Instance, Order : {string})
 
     local OrderedChildren = OrderChildren(Folder:GetChildren(), Order)
 
-    for _, Child : Instance in OrderedChildren do
+    for _, Child: ModuleScript in OrderedChildren do
         Initializer.InitModuleAsync(Child)
     end
 end

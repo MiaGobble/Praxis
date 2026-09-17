@@ -37,7 +37,7 @@ local Signal = {}
 Signal.__index = Signal
 
 -- Imports
-local Connection = require(script.Connection)
+local Connection = require("@self/Connection")
 
 -- Types extended
 export type Connection = Connection.Connection
@@ -53,7 +53,7 @@ export type Signal<T...> = {
 	Wait: (self: Signal<T...>) -> T...,
 }
 
-local FreeRunnerThread = nil
+local FreeRunnerThread: thread? = nil
 
 local function AcquireRunnerThreadAndCallEventHandler(fn, ...)
 	local AcquiredRunnerThread = FreeRunnerThread
@@ -84,7 +84,7 @@ function Signal.new<T...>(): Signal<T...>
 		_YieldedThreads = nil,
 	}, Signal)
 
-	return self
+	return self :: any
 end
 
 --[=[
@@ -108,7 +108,7 @@ function Signal.Wrap<T...>(rbxScriptSignal: RBXScriptSignal): Signal<T...>
 		"Argument #1 to Signal.Wrap must be a RBXScriptSignal; got " .. typeof(rbxScriptSignal)
 	)
 
-	local signal = Signal.new()
+	local signal = Signal.new() :: any
 	signal._ProxyHandler = rbxScriptSignal:Connect(function(...)
 		signal:Fire(...)
 	end)
@@ -147,13 +147,13 @@ function Signal.Connect<T...>(self: Signal<T...>, fn)
 		_Signal = self,
 		_Fn = fn,
 		_Next = false,
-	}, Connection)
+	}, Connection) :: any
 
-	if self._HandlerListHead then
-		ThisConnection._Next = self._HandlerListHead
-		self._HandlerListHead = ThisConnection
+	if (self :: any)._HandlerListHead then
+		ThisConnection._Next = self._HandlerListHead;
+		(self :: any)._HandlerListHead = ThisConnection
 	else
-		self._HandlerListHead = ThisConnection
+		(self :: any)._HandlerListHead = ThisConnection
 	end
 
 	return ThisConnection
@@ -187,7 +187,7 @@ end
 ]=]
 
 function Signal.Once<T...>(self: Signal<T...>, fn)
-	local ThisConnection
+	local ThisConnection: Connection
 	local Done = false
 
 	ThisConnection = self:Connect(function(...)
@@ -206,7 +206,7 @@ end
 function Signal.GetConnections<T...>(self: Signal<T...>)
 	local Items = {}
 
-	local Item = self._HandlerListHead
+	local Item = (self :: any)._HandlerListHead
 	while Item do
 		table.insert(Items, Item)
 		Item = Item._Next
@@ -223,22 +223,22 @@ end
 ]=]
 
 function Signal.DisconnectAll<T...>(self: Signal<T...>)
-	local Item = self._HandlerListHead
+	local Item = (self :: any)._HandlerListHead
 	while Item do
 		Item.Connected = false
 		Item = Item._Next
 	end
-	self._HandlerListHead = false
+	(self :: any)._HandlerListHead = false
 
-	local YieldedThreads = rawget(self, "_YieldedThreads")
+	local YieldedThreads = rawget(self :: any, "_YieldedThreads") :: {[thread]: unknown}?
 	if YieldedThreads then
 		for thread in YieldedThreads do
-			if coroutine.status(thread :: thread) == "suspended" then -- Doing a typecast to silence a linter error
+			if coroutine.status(thread) == "suspended" then
 				warn(debug.traceback(thread, "signal disconnected; yielded thread cancelled", 2))
 				task.cancel(thread)
 			end
 		end
-		table.clear(self._YieldedThreads)
+		table.clear((self :: any)._YieldedThreads)
 	end
 end
 
@@ -255,13 +255,15 @@ end
 ]=]
 
 function Signal.Fire<T...>(self: Signal<T...>, ...)
-	local Item = self._HandlerListHead
+	local Item = (self :: any)._HandlerListHead
 	while Item do
 		if Item.Connected then
-			if not FreeRunnerThread then
+			-- Fix: We must check the status of the cached thread before attempting to reuse it, as it could have been
+			-- closed externally, and that would break dispatch.
+			if not FreeRunnerThread or coroutine.status(FreeRunnerThread :: thread) ~= "suspended" then
 				FreeRunnerThread = coroutine.create(RunEventHandlerInFreeThread)
 			end
-			task.spawn(FreeRunnerThread, Item._Fn, ...)
+			task.spawn(FreeRunnerThread :: thread, Item._Fn, ...)
 		end
 		Item = Item._Next
 	end
@@ -277,7 +279,7 @@ end
 ]=]
 
 function Signal.FireDeferred<T...>(self: Signal<T...>, ...)
-	local Item = self._HandlerListHead
+	local Item = (self :: any)._HandlerListHead
 	while Item do
 		local Conn = Item
 		task.defer(function(...)
@@ -306,16 +308,18 @@ end
 ]=]
 
 function Signal.Wait<T...>(self: Signal<T...>)
-	local YieldedThreads = rawget(self, "_YieldedThreads")
+	local YieldedThreads = rawget(self :: any, "_YieldedThreads") :: {[thread]: unknown}?
 	if not YieldedThreads then
-		YieldedThreads = {}
-		rawset(self, "_YieldedThreads", YieldedThreads)
+		YieldedThreads = {} :: {[thread]: unknown}?
+		rawset(self :: any, "_YieldedThreads", YieldedThreads)
 	end
 
+	local _: typeof(assert(YieldedThreads))
 	local Thread = coroutine.running()
 	YieldedThreads[Thread] = true
 
 	self:Once(function(...)
+		local _: typeof(assert(YieldedThreads))
 		YieldedThreads[Thread] = nil
 
 		if coroutine.status(Thread) == "suspended" then
@@ -342,7 +346,7 @@ end
 function Signal.Destroy<T...>(self: Signal<T...>)
 	self:DisconnectAll()
 
-	local ProxyHandler = rawget(self, "_ProxyHandler")
+	local ProxyHandler = rawget(self :: any, "_ProxyHandler")
 	if ProxyHandler then
 		ProxyHandler:Disconnect()
 	end

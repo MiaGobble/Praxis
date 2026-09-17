@@ -14,16 +14,12 @@ local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
 
 -- Imports
-local Packages = script.Parent:FindFirstChild("roblox_packages")
-	or script.Parent:FindFirstChild("Packages")
-	or script.Parent.Parent
-
-local Signal = require(Packages.Signal)
-local Bucket = require(Packages.Bucket)
+local Signal = require("@pkg/Signal")
+local Bucket = require("@pkg/Bucket")
 
 -- Types
-export type GamepadState = {[Enum.KeyCode] : InputObject}
-type Gamepad = typeof(setmetatable({}, Gamepad)) & {
+type GamepadState = {[Enum.KeyCode] : InputObject}
+type Gamepad = typeof(setmetatable({} :: {
     _Bucket : Bucket.Bucket,
     _GamepadBucket : Bucket.Bucket,
     _GamepadInput : Enum.UserInputType?,
@@ -36,7 +32,7 @@ type Gamepad = typeof(setmetatable({}, Gamepad)) & {
     DefaultDeadzone : number,
     SupportsVibration : boolean,
     State : GamepadState,
-}
+}, Gamepad))
 
 local function ApplyDeadzone(Value : number, Threshold : number) : number
     if math.abs(Value) < Threshold then
@@ -89,8 +85,8 @@ local function HeartbeatDelay(Duration : number, Callback : () -> ()) : RBXScrip
     return Connection
 end
 
-function Gamepad.new(GamepadInput : Enum.UserInputType?)
-    local self : Gamepad = setmetatable({}, Gamepad)
+function Gamepad.new(GamepadInput : Enum.UserInputType?): (Gamepad)
+    local self = setmetatable({}, Gamepad) :: Gamepad
 
     self._Bucket = Bucket.new()
     self._GamepadBucket = Bucket.new()
@@ -119,7 +115,7 @@ function Gamepad.new(GamepadInput : Enum.UserInputType?)
     return self
 end
 
-function Gamepad._SetupActiveGamepad(self : Gamepad, GamepadInput : Enum.UserInputType?)
+function Gamepad._SetupActiveGamepad(self : Gamepad, GamepadInput : Enum.UserInputType?): ()
     local LastGamepad = self._GamepadInput
 
     if GamepadInput == LastGamepad then
