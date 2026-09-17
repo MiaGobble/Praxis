@@ -1,5 +1,5 @@
 name = "miagobble/data_store"
-version = "1.0.1"
+version = "1.0.2"
 description = "Wrapper utilities around Roblox DataStoreService with retry support and ser/des for any type."
 license = "MIT"
 authors = ["Mia Gobble (https://praxis.igottic.com/)"]
@@ -14,3 +14,6 @@ build_files = ["init.luau"]
 
 [indices]
 default = "https://github.com/pesde-pkg/index"
+
+[dependencies]
+SerDes = { name = "miagobble/ser_des", version = "^1.0.0" }

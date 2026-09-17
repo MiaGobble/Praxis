@@ -1,6 +1,6 @@
 [package]
 name = "miagobble/data-store"
-version = "1.0.1"
+version = "1.0.2"
 registry = "https://github.com/UpliftGames/wally-index"
 realm = "shared"
 license = "MIT"
@@ -8,3 +8,4 @@ homepage = "https://praxis.igottic.com/"
 description = "Wrapper utilities around Roblox DataStoreService with retry support and ser/des for any type."
 
 [dependencies]
+SerDes = "miagobble/ser-des@1.0.0"
