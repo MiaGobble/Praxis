@@ -16,4 +16,4 @@ build_files = ["init.luau"]
 default = "https://github.com/pesde-pkg/index"
 
 [dependencies]
-SerDes = { name = "miagobble/ser_des", version = "^1.0.0" }
+SerDes = { workspace = "miagobble/ser_des", version = "^" }
