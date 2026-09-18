@@ -55,4 +55,3 @@ Need support, want to leave suggestions, or chat about Praxis? Join this Discord
 When distrubuting Praxis libraries, you'll need to rewrite the `@pkg` shortform. To do, use any of the following commands with lute:
 * **Pesde:** `lute rewrite-requires -i src/ -o dist/ -a "pkg=roblox_packages/" -r "pkg=pesde.toml"`
 * **Wally:** `lute rewrite-requires -i src/ -o dist/ -a "pkg=../" -r "pkg=wally.toml"`
-* **Standalone:** `lute rewrite-requires -i src/ -o dist/ -a "pkg=../" -r "pkg=abs:src/Packages"`
