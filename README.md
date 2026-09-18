@@ -48,10 +48,47 @@ Need support, want to leave suggestions, or chat about Praxis? Join this Discord
 
 <!--moonwave-hide-after-this-line-->
 
+# Building from Source
+
+## Rewrite Requires
+
+In order to have proper type-checking during editing, package dependencies are imported using the `@pkg` alias. It is not usable at runtime however, and must be resolved before use.
+
+The `rewrite-requires` tool automates this, and information on it can be viewed by running `lute rewrite-requires -h`.
+
+## Distribution
+
+### Wally
+
+Rewrite requires using the following command:
+
+```bash
+lute rewrite-requires -i src/ -o wally-dist/ -a "pkg=../" -r "pkg=wally.toml"
+```
+
+### Pesde
+
+Rewrite requires using the following command:
+
+```bash
+lute rewrite-requires -i src/ -o pesde-dist/ -a "pkg=roblox_packages/" -r "pkg=pesde.toml"
+```
+
+### Standalone Builds
+
+> [!IMPORTANT]
+> Prior to rewriting requires, you **must first install package dependencies** using `pesde install`.
+
+Rewrite requires using the following command:
+
+```bash
+lute rewrite-requires -i src/Packages/Praxis -o dist/ -a "pkg=roblox_packages/" -r "pkg=pesde.toml"
+```
+
+Then build using Rojo:
+
+* For testing (build as place): `rojo build test.project.json --output "Praxis.rbxl"`
+* For distribution (build as model): `rojo build default.project.json --output "Praxis.rbxm"`
+
 # SCDS Rating
 <img src="./.moonwave/static/oib.png" alt="SCDS OIB Rating" width="175.5" height="167.75">
-
-# Rewriting Requires
-When distrubuting Praxis libraries, you'll need to rewrite the `@pkg` shortform. To do, use any of the following commands with lute:
-* **Pesde:** `lute rewrite-requires -i src/ -o dist/ -a "pkg=roblox_packages/" -r "pkg=pesde.toml"`
-* **Wally:** `lute rewrite-requires -i src/ -o dist/ -a "pkg=../" -r "pkg=wally.toml"`
