@@ -33,15 +33,6 @@ const HELP_MESSAGE = `\z
 	\n    --continue                      Continue processing on non-fatal errors.\z
 	\n    --dry-run                       Run the process without making changes to files.\z
 	\n                                    Use with --verbose to review changes.\z
-	\nUsage Examples (Praxis):\z
-	\n    {ansi.colorForeground(ansi.italic("# Pesde Build"), "Bright Black")}\z
-	\n    {ansi.colorForeground("lute rewrite-requires -i src/ -o dist/ -a \"pkg=roblox_packages/\" -r \"pkg=pesde.toml\"", "Cyan")}\z
-	\n\z
-	\n    {ansi.colorForeground(ansi.italic("# Wally Build"), "Bright Black")}\z
-	\n    {ansi.colorForeground("lute rewrite-requires -i src/ -o dist/ -a \"pkg=../\" -r \"pkg=wally.toml\"", "Cyan")} {ansi.colorForeground(ansi.italic("# Wally creates .lua files that link to the dependencies"), "Bright Black")}\z
-	\n\z
-	\n    {ansi.colorForeground(ansi.italic("# Standalone Build"), "Bright Black")}\z
-	\n    {ansi.colorForeground("lute rewrite-requires -i src/ -o dist/ -a \"pkg=../\" -r \"pkg=abs:src/Packages\"", "Cyan")}\z
 `
 
 const function unhandled(a: never): ()
