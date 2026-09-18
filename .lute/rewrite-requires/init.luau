@@ -192,7 +192,7 @@ else
 	print("No output path specified, writing in-rlace.")
 end
 
---- Cache of found nearest retargets keyed by directory paths.
+-- Cache of found nearest retargets keyed by directory paths.
 const packageRootCache: {[string]: path.Path?} = {}
 
 const function resolvePackageRoot(initMode: boolean, fileDir: path.Pathlike, scriptDir: path.Pathlike, search: path.Pathlike): (path.Path?)
