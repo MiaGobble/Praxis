@@ -9,12 +9,22 @@ local Time = {}
 -- Constants
 local SECONDS_PER_DAY = 24 * 60 * 60
 
-local function GetDateTimeUTC(unixTimestamp : number?) : DateTime
+export type DateTimeComponents = {
+	Year: number,
+	Month: number,
+	Day: number,
+	Hour: number,
+	Minute: number,
+	Second: number,
+	Millisecond: number,
+}
+
+local function GetDateTimeUTC(unixTimestamp : number?) : DateTimeComponents
     if unixTimestamp == nil then
-        return DateTime.now():ToUniversalTime()
+        return DateTime.now():ToUniversalTime() :: DateTimeComponents
     end
 
-    return DateTime.fromUnixTimestamp(unixTimestamp):ToUniversalTime()
+    return DateTime.fromUnixTimestamp(unixTimestamp):ToUniversalTime() :: DateTimeComponents
 end
 
 --[=[
@@ -39,7 +49,7 @@ end
     Returns a `DateTime` converted to universal time.
 ]=]
 
-function Time.GetDateTimeUTC(unixTimestamp : number?) : DateTime
+function Time.GetDateTimeUTC(unixTimestamp : number?) : DateTimeComponents
     return GetDateTimeUTC(unixTimestamp)
 end
 

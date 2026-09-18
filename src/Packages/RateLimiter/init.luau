@@ -8,10 +8,10 @@ local RateLimiter = {}
 RateLimiter.__index = RateLimiter
 
 -- Types
-type RateLimiter = typeof(setmetatable({}, RateLimiter)) & {
+type RateLimiter = typeof(setmetatable({} :: {
     LastTrigger : number,
     Cooldown : number,
-}
+}, RateLimiter))
 
 --[=[
     @param cooldown number -- The cooldown time in seconds.
@@ -21,7 +21,7 @@ type RateLimiter = typeof(setmetatable({}, RateLimiter)) & {
 ]=]
 
 function RateLimiter.new(cooldown : number) : RateLimiter
-    local self : RateLimiter = setmetatable({}, RateLimiter)
+    local self = setmetatable({}, RateLimiter) :: RateLimiter
 
     self.LastTrigger = 0
     self.Cooldown = cooldown

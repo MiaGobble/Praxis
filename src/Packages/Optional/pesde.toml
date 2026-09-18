@@ -1,5 +1,5 @@
 name = "miagobble/optional"
-version = "1.0.0"
+version = "1.0.2"
 description = "Calls `require` on object or path, returning nil if it does not exist."
 license = "MIT"
 authors = ["Mia Gobble (https://praxis.igottic.com/)"]

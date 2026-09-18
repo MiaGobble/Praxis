@@ -10,11 +10,7 @@ local SerDes = {}
 local HttpService = game:GetService("HttpService")
 
 -- Imports
-local Packages = script:FindFirstChild("roblox_packages")
-	or script:FindFirstChild("Packages")
-	or script.Parent
-
-local ValuePacker = require(Packages.ValuePacker)
+local ValuePacker = require("@pkg/ValuePacker")
 
 -- Types
 type EncodedNode = {
@@ -48,7 +44,7 @@ local VALUE_PACKER_TYPES : {[string] : boolean} = {
 
 local function BufferToByteArray(PackedBuffer : buffer) : {number}
     local ByteLength = buffer.len(PackedBuffer)
-    local Bytes = table.create(ByteLength)
+    local Bytes = table.create(ByteLength) :: {number}
 
     for Index = 0, ByteLength - 1 do
         Bytes[Index + 1] = buffer.readu8(PackedBuffer, Index)

@@ -49,4 +49,9 @@ Need support, want to leave suggestions, or chat about Praxis? Join this Discord
 <!--moonwave-hide-after-this-line-->
 
 # SCDS Rating
-<img src="./.moonwave/static/fib.png" alt="Alt Text" width="175.5" height="167.75">
+<img src="./.moonwave/static/oib.png" alt="SCDS OIB Rating" width="175.5" height="167.75">
+
+# Rewriting Requires
+When distrubuting Praxis libraries, you'll need to rewrite the `@pkg` shortform. To do, use any of the following commands with lute:
+* **Pesde:** `lute rewrite-requires -i src/ -o dist/ -a "pkg=roblox_packages/" -r "pkg=pesde.toml"`
+* **Wally:** `lute rewrite-requires -i src/ -o dist/ -a "pkg=../" -r "pkg=wally.toml"`

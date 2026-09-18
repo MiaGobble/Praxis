@@ -1,5 +1,5 @@
 name = "miagobble/traceback_utils"
-version = "1.0.1"
+version = "1.0.3"
 description = "A collection of utilities related to debug library on Roblox."
 license = "MIT"
 authors = ["Mia Gobble (https://praxis.igottic.com/)"]

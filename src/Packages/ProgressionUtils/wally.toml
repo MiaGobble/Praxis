@@ -1,6 +1,6 @@
 [package]
 name = "miagobble/progression-utils"
-version = "1.0.4"
+version = "1.0.6"
 registry = "https://github.com/UpliftGames/wally-index"
 realm = "shared"
 license = "MIT"

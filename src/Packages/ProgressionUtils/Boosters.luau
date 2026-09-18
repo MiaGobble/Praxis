@@ -14,18 +14,20 @@ type BoosterDataInput = BoosterDataCore & {
 
 export type BoosterData = BoosterDataInput & {
     StartingTime : number,
+	TimeStarted : number,
     Bucket : any,
+	[number]: BoosterDataInput & {
+		StartingTime: number,
+		Bucket: Bucket.Bucket,
+	}
 }
 
 -- Services
 local RunService = game:GetService("RunService")
 
 -- Imports
-local Packages = script.Parent:FindFirstChild("roblox_packages")
-	or script.Parent:FindFirstChild("Packages")
-	or script.Parent.Parent
-local Signal = require(Packages.Signal)
-local Bucket = require(Packages.Bucket)
+local Signal = require("@pkg/Signal")
+local Bucket = require("@pkg/Bucket")
 
 -- Variables
 local ActiveBoosters : {[Player] : BoosterData} = {}
@@ -36,7 +38,7 @@ Boosters.BoosterEnded = Signal.new()
 
 function Boosters.ApplyBooster(Player : Player, BoosterData : BoosterDataInput)
     if not ActiveBoosters[Player] then
-        ActiveBoosters[Player] = {}
+        ActiveBoosters[Player] = {} :: any
     end
 
     if BoosterData.StackMethod == "AddTime" then
@@ -104,7 +106,7 @@ function Boosters.ApplyBooster(Player : Player, BoosterData : BoosterDataInput)
 end
 
 function Boosters.GetActiveBoosters(Player : Player) : BoosterData
-    return ActiveBoosters[Player] or {}
+    return ActiveBoosters[Player] or {} :: any
 end
 
 function Boosters.GetTimeLeftForBooster(Player : Player, BoosterId : string) : number

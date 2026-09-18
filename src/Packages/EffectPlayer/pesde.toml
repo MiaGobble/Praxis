@@ -1,5 +1,5 @@
 name = "miagobble/effect_player"
-version = "1.0.0"
+version = "1.0.2"
 description = "Play visual effects created by standard visual effect plugins."
 license = "MIT"
 authors = ["Mia Gobble (https://praxis.igottic.com/)"]

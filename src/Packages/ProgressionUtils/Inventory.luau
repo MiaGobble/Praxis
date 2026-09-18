@@ -18,10 +18,7 @@ export type InventoryData = {
 local HttpService = game:GetService("HttpService")
 
 -- Imports
-local Packages = script.Parent:FindFirstChild("roblox_packages")
-	or script.Parent:FindFirstChild("Packages")
-	or script.Parent.Parent
-local Typer = require(Packages.Typer)
+local Typer = require("@pkg/Typer")
 
 function Inventory.AddItemToInventory(InventoryData : InventoryData, ItemData : ItemDataInput, MaxStack : number) : InventoryData
     Typer.TupleAssertion("table", "string")(ItemData, ItemData.ItemId)
@@ -65,6 +62,11 @@ function Inventory.RemoveItemFromInventory(InventoryData : InventoryData, ItemId
             OpenStack = ThisItem
         end
     end
+
+	if not OpenStack then
+		warn("OpenStack is missing")
+		return InventoryData
+	end
 
     if OpenStack.Quantity > 1 then
         OpenStack.Quantity -= 1

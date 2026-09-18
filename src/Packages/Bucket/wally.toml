@@ -1,6 +1,6 @@
 [package]
 name = "miagobble/bucket"
-version = "1.0.5"
+version = "1.0.7"
 registry = "https://github.com/UpliftGames/wally-index"
 realm = "shared"
 license = "MIT"

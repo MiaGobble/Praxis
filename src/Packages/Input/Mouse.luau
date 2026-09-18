@@ -14,15 +14,12 @@ local RAY_DISTANCE = 1000
 local UserInputService = game:GetService("UserInputService")
 
 -- Imports
-local Packages = script.Parent:FindFirstChild("roblox_packages")
-	or script.Parent:FindFirstChild("Packages")
-	or script.Parent.Parent
 
-local Signal = require(Packages.Signal)
-local Bucket = require(Packages.Bucket)
+local Signal = require("@pkg/Signal")
+local Bucket = require("@pkg/Bucket")
 
 -- Types
-type Mouse = typeof(setmetatable({}, Mouse)) & {
+type Mouse = typeof(setmetatable({} :: {
     _Bucket : Bucket.Bucket,
     LeftDown : Signal.Signal<boolean>,
     LeftUp : Signal.Signal<boolean>,
@@ -32,10 +29,10 @@ type Mouse = typeof(setmetatable({}, Mouse)) & {
     MiddleUp : Signal.Signal<boolean>,
     Moved : Signal.Signal<Vector2, boolean>,
     Scrolled : Signal.Signal<number, boolean>,
-}
+}, Mouse))
 
-function Mouse.new()
-    local self : Mouse = setmetatable({}, Mouse)
+function Mouse.new(): (Mouse)
+    local self = setmetatable({}, Mouse) :: Mouse
 
     self._Bucket = Bucket.new()
 

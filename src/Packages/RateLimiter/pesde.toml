@@ -1,5 +1,5 @@
 name = "miagobble/rate_limiter"
-version = "1.0.0"
+version = "1.0.2"
 description = "A simple OOP class for rate limiting."
 license = "MIT"
 authors = ["Mia Gobble (https://praxis.igottic.com/)"]

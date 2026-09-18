@@ -9,7 +9,11 @@
 local Symbol = {}
 
 -- Types
-export type Symbol = typeof(newproxy(true))
+
+-- `typeof(newproxy())` is just `any`, so we don't do it.
+export type Symbol = {
+	AsString: (self: Symbol) -> (string)
+}
 
 --[=[
 	Creates a blank userdata that can be converted into a string.
@@ -18,7 +22,7 @@ export type Symbol = typeof(newproxy(true))
 	@return Symbol
 ]=]
 
-function Symbol.new(Name : string)
+function Symbol.new(Name : string): (Symbol)
 	local self = newproxy(true)
 
 	getmetatable(self).__tostring = function()
@@ -34,7 +38,7 @@ end
 	@return Symbol
 ]=]
 
-function Symbol.newNameless()
+function Symbol.newNameless(): (Symbol)
 	local self = newproxy(true)
 
 	return self

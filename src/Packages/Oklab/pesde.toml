@@ -1,5 +1,5 @@
 name = "miagobble/oklab"
-version = "1.0.0"
+version = "1.0.2"
 description = "A different color space that looks more uniform to the human eye."
 license = "MIT"
 authors = ["Mia Gobble (https://praxis.igottic.com/)"]

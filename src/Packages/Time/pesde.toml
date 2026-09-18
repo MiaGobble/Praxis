@@ -1,5 +1,5 @@
 name = "miagobble/time"
-version = "1.0.0"
+version = "1.0.2"
 description = "Utilities related to time, including for daily rewards."
 license = "MIT"
 authors = ["Mia Gobble (https://praxis.igottic.com/)"]
