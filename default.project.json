@@ -6,7 +6,7 @@
 
     "ReplicatedStorage": {
       "Praxis": {
-        "$path": "src/Packages/Praxis"
+        "$path": "dist/Packages/Praxis"
       }
     }
   }
