@@ -8,10 +8,10 @@ local Boosters = require("./Boosters")
 Scores.OnScoreAdded = Signal.new()
 Scores.OnScoreRemoved = Signal.new()
 
---- Set with DeclareSetScoreCallback
+-- Set with DeclareSetScoreCallback
 Scores.SetScore = (nil :: any) :: ((Player, string, number) -> ())
 
---- Set with DeclareGetScoreCallback
+-- Set with DeclareGetScoreCallback
 Scores.GetScore = (nil :: any) :: ((Player, string) -> (number))
 
 local function AssertScoreCallbacks()
