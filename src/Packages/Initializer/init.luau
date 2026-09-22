@@ -6,11 +6,20 @@
 
 local Initializer = {}
 
+-- Types
+-- We could use keyof<typeof(Initializer.Config.ThrownWarnings)> if old solver compatibility is not a requirement
+type WarningType = "NoInitFunction" | "NotAModule" | "ErrorThrown" | "NotATableModule" | "AlreadyInitialized" | "NoOrderDefined"
+
 -- Constants
 local INITIALIZED_TAG_INDEX = "__HAS_INITIALIZED"
 
 Initializer.Config = {
-    InitializeFunctionName = "Init",
+    InitializeFunctionNames = {
+        "Init",
+        "init",
+    },
+
+    AppendContextToInitFunction = true, -- If true, will also check for everything under initialize function names appended with "Server" or "Client"
     ShowLoadDebug = true,
 
     ThrownWarnings = {
@@ -23,8 +32,8 @@ Initializer.Config = {
     }
 }
 
--- We could use keyof<typeof(Initializer.Config.ThrownWarnings)> if old solver compatibility is not a requirement
-type WarningType = "NoInitFunction" | "NotAModule" | "ErrorThrown" | "NotATableModule" | "AlreadyInitialized" | "NoOrderDefined"
+-- Services
+local RunService = game:GetService("RunService")
 
 local function ThrowWarning(WarningType : WarningType, WarningMessage : string)
     if not Initializer.Config.ThrownWarnings[WarningType] then
@@ -83,8 +92,28 @@ function Initializer.InitModuleAsync(Object : ModuleScript)
         return
     end
 
-    if not Module[Initializer.Config.InitializeFunctionName] then
-        ThrowWarning("NoInitFunction", `Attempt to init module {Object:GetFullName()}, but it does not have function name "{Initializer.Config.InitializeFunctionName}"`)
+    local InitializeFunctionName = nil
+
+    for _, name : string in Initializer.Config.InitializeFunctionNames do
+        if Module[name] then
+            InitializeFunctionName = name
+            break
+        end
+    end
+
+    if not InitializeFunctionName and Initializer.Config.AppendContextToInitFunction then
+        local AppendedName = if RunService:IsClient() then "Client" else "Server"
+
+        for _, name : string in Initializer.Config.InitializeFunctionNames do
+            if Module[name .. AppendedName] then
+                InitializeFunctionName = name .. AppendedName
+                break
+            end
+        end
+    end
+
+    if not InitializeFunctionName then
+        ThrowWarning("NoInitFunction", `Attempt to init module {Object:GetFullName()}, but it does not have any matching initialize function names`)
         return
     end
 
@@ -93,7 +122,7 @@ function Initializer.InitModuleAsync(Object : ModuleScript)
         return
     end
 
-    local DidInitialize, Issue = pcall(Module[Initializer.Config.InitializeFunctionName])
+    local DidInitialize, Issue = pcall(Module[InitializeFunctionName])
 
     if not DidInitialize then
         ThrowWarning("ErrorThrown", `Attempt to init module {Object:GetFullName()}, but error was thrown during init call: {Issue}`)
@@ -103,7 +132,7 @@ function Initializer.InitModuleAsync(Object : ModuleScript)
     Module[INITIALIZED_TAG_INDEX] = true
 
     if Initializer.Config.ShowLoadDebug then
-        print(`[INITIALIZER DEBUG] Initialized module {Object:GetFullName()}`)
+        print(`[INITIALIZER DEBUG] Initialized module {Object:GetFullName()} with function name "{InitializeFunctionName}"`)
     end
 end
 
