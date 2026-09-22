@@ -25,12 +25,21 @@ if RunService:IsClient() then
 end
 
 -- Variables
-local SerialDataStore = DataStore.CreateStore({
-    Name = SERIALS_DATASTORE_NAME,
-    Template = {
-        Value = 0,
-    },
-})
+local SerialDataStore = nil
+
+local Success, Error = pcall(function()
+    SerialDataStore = DataStore.CreateStore({
+        Name = SERIALS_DATASTORE_NAME,
+        Template = {
+            Value = 0,
+        },
+    })
+end)
+
+if not Success then
+    warn(`[BADGES DEBUG] Failed to create serial data store: {Error}, {debug.traceback()}; Badge module will not work.`)
+    return Badges
+end
 
 -- Types
 export type BadgeAwardData = {

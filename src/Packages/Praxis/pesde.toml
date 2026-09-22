@@ -1,5 +1,5 @@
 name = "miagobble/praxis"
-version = "1.2.2"
+version = "1.2.3"
 description = "Library with utilities and more for general usage in any project."
 license = "MIT"
 authors = ["Mia Gobble (https://praxis.igottic.com/)"]
