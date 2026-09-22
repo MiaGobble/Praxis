@@ -2,7 +2,7 @@ name = "miagobble/praxis_workspace"
 version = "0.0.0"
 private = true
 
-workspace_members = ["src/Packages/*"]
+workspace_members = ["pesde-dist/Packages/*"]
 
 [target]
 environment = "roblox"

@@ -1,5 +1,8 @@
-# Project place file
+# Project build files
+/Praxis.rbxl
 /Praxis.rbxlx
+/Praxis.rbxm
+/Praxis.rbxmx
 
 # Roblox Studio lock files
 /*.rbxlx.lock
