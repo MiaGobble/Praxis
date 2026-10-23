@@ -1,0 +1,10 @@
+[package]
+name = "miagobble/iter"
+version = "0.1.0"
+registry = "https://github.com/UpliftGames/wally-index"
+realm = "shared"
+license = "MIT"
+homepage = "https://praxis.igottic.com/"
+description = "Lazy iterator helpers for Luau."
+
+[dependencies]
