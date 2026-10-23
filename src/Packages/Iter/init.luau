@@ -31,7 +31,7 @@ export type SizeHintFunction = () -> (number, number?)
 	@within Iter
 
 	@interface IterProps<T>
-	.Next NextFunction -- Advances the Iterator and returns the next value; Returns `nil` when iteration is finished.
+	.Next NextFunction<T> -- Advances the Iterator and returns the next value; Returns `nil` when iteration is finished.
 	.SizeHint SizeHintFunction -- Returns the bounds on the remaining length of the Iterator.
 ]=]
 export type IterProps<T> = {
@@ -41,7 +41,7 @@ export type IterProps<T> = {
 export type Iter<T = unknown> = typeof(Module.new(...))
 
 --[=[
-	@type Iterable<K, V> {[K]: V}
+	@type Iterable<K,V> {[K]: V}
 	@within Iter
 ]=]
 export type Iterable<K, V> = { [K]: V }
