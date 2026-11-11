@@ -32,6 +32,7 @@ Praxis contains the following libraries (with "TBD" ones being planned but not i
 | Binder | Binds OOP classes to Roblox instances | https://wally.run/package/miagobble/binder | https://pesde.dev/packages/miagobble/binder |
 | Select | Used to select singular values from a list of arguments | https://wally.run/package/miagobble/select | https://pesde.dev/packages/miagobble/select/ |
 | Replicator | Server-to-client diff-based replication system | https://wally.run/package/miagobble/replicator | https://pesde.dev/packages/miagobble/replicator/ |
+| Iter | Lazy iterator helpers for Luau | https://wally.run/package/miagobble/iter | https://pesde.dev/packages/miagobble/iter/ |
 | Session | Session-style system that binds players to sessions with cleanup and updates | TBD | TBD |
 | Flipbook | Utility for managing flipbooks | TBD | TBD |
 | Hint | Simple interface based on old Roblox `Hint` instance | TBD | TBD |
@@ -76,19 +77,27 @@ lute rewrite-requires -i src/ -o pesde-dist/ -a "pkg=roblox_packages/" -r "pkg=p
 
 ### Standalone Builds
 
-> [!IMPORTANT]
-> Prior to rewriting requires, you **must first install package dependencies** using `pesde install`.
+#### 1. Pesde dependency setup
 
-Rewrite requires using the following command:
+For publishing reasons, `workspace_members` points at `pesde-dist`, meaning you first have to perform the Pesde distribution step (to allow pesde to find workspace dependencies).
+
+Run the following commands:
+
+```bash
+lute rewrite-requires -i src -o pesde-dist/ -a "pkg=roblox_packages/" -r "pkg=pesde.toml"
+pesde install
+```
+
+#### 2. Rewrite requires
 
 ```bash
 lute rewrite-requires -i src/Packages/Praxis -o dist/ -a "pkg=roblox_packages/" -r "pkg=pesde.toml"
 ```
 
-Then build using Rojo:
+#### 3. Build using Rojo
 
 * For testing (build as place): `rojo build test.project.json --output "Praxis.rbxl"`
-* For distribution (build as model): `rojo build default.project.json --output "Praxis.rbxm"`
+* For distribution (build as model): `rojo build build.project.json --output "Praxis.rbxm"`
 
 # SCDS Rating
 <img src="./.moonwave/static/oib.png" alt="SCDS OIB Rating" width="175.5" height="167.75">
