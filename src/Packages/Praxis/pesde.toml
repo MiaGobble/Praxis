@@ -1,5 +1,5 @@
 name = "miagobble/praxis"
-version = "1.2.3"
+version = "1.2.4"
 description = "Library with utilities and more for general usage in any project."
 license = "MIT"
 authors = ["Mia Gobble (https://praxis.igottic.com/)"]
@@ -41,3 +41,4 @@ Typer = { workspace = "miagobble/typer", version = "^" }
 ValuePacker = { workspace = "miagobble/value_packer", version = "^" }
 Select = { workspace = "miagobble/select", version = "^" }
 Replicator = { workspace = "miagobble/replicator", version = "^" }
+Iter = { workspace = "miagobble/iter", version = "^" }
