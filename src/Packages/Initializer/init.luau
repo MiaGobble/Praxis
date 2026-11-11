@@ -141,15 +141,21 @@ end
 
     ```lua
     local Folder = path.to.folder
+    local IgnoredModuleNames = {"IgnoredModule"}
 
-    Initializer.InitFolderAsync(Folder)
+    Initializer.InitFolderAsync(Folder, IgnoredModuleNames)
     ```
 
     @param Folder Instance -- The bin of modules being initialized
+    @param IgnoredModuleNames {string}? -- The names of modules to ignore, optional
 ]=]
 
-function Initializer.InitFolderAsync(Folder : Instance)
+function Initializer.InitFolderAsync(Folder : Instance, IgnoredModuleNames : {string}?)
     for _, Child: ModuleScript in Folder:GetChildren() do
+        if IgnoredModuleNames and table.find(IgnoredModuleNames, Child.Name) then
+            continue
+        end
+
         Initializer.InitModuleAsync(Child)
     end
 end
@@ -160,15 +166,17 @@ end
     ```lua
     local Folder = path.to.folder
     local Order = {"FirstModule", "SecondModule", "ThirdModule"}
+    local IgnoredModuleNames = {"IgnoredModule"}
 
-    Initializer.InitOrderedFolderAsync(Folder, Order)
+    Initializer.InitOrderedFolderAsync(Folder, Order, IgnoredModuleNames)
     ```
 
     @param Folder Instance -- The bin of modules being initialized
     @param Order {string} -- The load order
+    @param IgnoredModuleNames {string}? -- The names of modules to ignore, optional
 ]=]
 
-function Initializer.InitOrderedFolderAsync(Folder : Instance, Order : {string})
+function Initializer.InitOrderedFolderAsync(Folder : Instance, Order : {string}, IgnoredModuleNames : {string}?)
     if not Order or #Order == 0 then
         ThrowWarning("NoOrderDefined", `No order defined when loading folder {Folder:GetFullName()}`)
         return
@@ -177,6 +185,10 @@ function Initializer.InitOrderedFolderAsync(Folder : Instance, Order : {string})
     local OrderedChildren = OrderChildren(Folder:GetChildren(), Order)
 
     for _, Child: ModuleScript in OrderedChildren do
+        if IgnoredModuleNames and table.find(IgnoredModuleNames, Child.Name) then
+            continue
+        end
+
         Initializer.InitModuleAsync(Child)
     end
 end
