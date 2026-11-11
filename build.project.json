@@ -1,0 +1,7 @@
+{
+	"name": "Praxis",
+	"tree": {
+		"$path": "dist"
+	},
+	"globIgnorePaths": ["pesde.toml", "wally.toml"]
+}
